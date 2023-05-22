@@ -1,2 +1,3 @@
-path:
-  data: "./data"
+paths:
+  data: "../data"
+  tagpacks: "../data/graphsense-tagpacks"
