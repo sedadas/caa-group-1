@@ -137,7 +137,7 @@ if __name__ == '__main__':
     parser.add_argument('-t', '--transactionFile',
                         help='Output file that includes the used transactions for this network', type=str, required = False)
     parser.add_argument('-max', '--maxTransactions',
-                        help='Max transactions for each address. Should be a multiple of 25. (Default:25)', type=str, required = False)
+                        help='Max transactions for each address. Should be a multiple of 25. (Default:25)', type=int, required = False)
     parser.add_argument('-physics', '--physics',
                         help='Enable/Disable physics. Default is true', type=bool, required = False)
     parser.add_argument('-jupyter', '--jupyterNotebook',
