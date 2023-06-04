@@ -71,7 +71,7 @@ def cutAddr(addr):
 def createNeighborhood(addrPool):
     #Get transactions for addr
     _newAddresses = set()
-    print("Fetching"+str(len(addrPool))+" addresses")
+    print("Fetching "+str(len(addrPool))+" addresses")
     for addr in addrPool:
         txs = list(api.getTransactions(addr,25))
         for tx in txs: # for every transaction of addr
