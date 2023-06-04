@@ -48,6 +48,7 @@ def main(args):
     if(args.transactionFile != None):
         with open(args.transactionFile, 'w') as outfile:
             outfile.write(json.dumps(usedTransactions))
+    print("Done")
     
 def draw(G,neighborhood,edgeTitle):
     _vouts = list(neighborhood[RELATIONSHIP.VOUT])
@@ -71,30 +72,28 @@ def cutAddr(addr):
 def createNeighborhood(addrPool):
     
     #Get transactions for addr
-    print(addrPool)
     _newAddresses = set()
     print(str(len(addrPool))+" addresses")
     for addr in addrPool:
-        print(addr)
-        txs = list(api.getTransactions(addr))
+        txs = list(api.getTransactions(addr,25))
         for tx in txs: # for every transaction of addr
             #Get its inputs and outputs
-            usedTransactions.append(tx["txid"])
-            _vouts = list(map((lambda x:x["scriptpubkey_address"]),tx["vout"]))
+            _vouts = list(map((lambda x:x["scriptpubkey_address"] if "scriptpubkey_address" in x else None),tx["vout"]))
             _vins = list(map(lambda x:x["prevout"]["scriptpubkey_address"],tx["vin"]))
             #create nodes and connect them
             for _to in _vouts:
-                _newAddresses.add(_to)
-                G.add_node(_to)
-                G.nodes[_to]['title'] =_to
-                G.nodes[_to]['label'] = cutAddr(_to)
-                for _from in _vins:
-                    _newAddresses.add(_from)
-                    G.add_node(_from)
-                    G.nodes[_from]['title'] = _from
-                    G.nodes[_from]['label'] = cutAddr(_from)
-                    G.add_edge(_from,_to)
-                    G.edges[_from,_to]['title'] = tx["txid"]
+                if _to != None:
+                    _newAddresses.add(_to)
+                    G.add_node(_to)
+                    G.nodes[_to]['title'] =_to
+                    G.nodes[_to]['label'] = cutAddr(_to)
+                    for _from in _vins:
+                        _newAddresses.add(_from)
+                        G.add_node(_from)
+                        G.nodes[_from]['title'] = _from
+                        G.nodes[_from]['label'] = cutAddr(_from)
+                        G.add_edge(_from,_to)
+                        G.edges[_from,_to]['title'] = tx["txid"]
     return list(_newAddresses)
             
     
