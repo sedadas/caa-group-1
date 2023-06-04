@@ -18,7 +18,7 @@ G = nx.DiGraph()
 usedTransactions = list()
 
 def main(args):
-    net = Network(directed=True,neighborhood_highlight=True)
+    net = Network(directed=True,neighborhood_highlight=True,height="2000px")
     with open(args.file, 'r') as ft:
         addrPool = json.load(ft)
 
@@ -31,7 +31,6 @@ def main(args):
         print("Iteration "+str(iteration)+"/"+str(args.depth))
         iteration += 1;
         addrPool = createNeighborhood(addrPool)
-        print("Done with "+str(len(addrPool))+" addresses")
 
 
     if(args.jsonOutput != None):
@@ -70,10 +69,9 @@ def cutAddr(addr):
     
 
 def createNeighborhood(addrPool):
-    
     #Get transactions for addr
     _newAddresses = set()
-    print(str(len(addrPool))+" addresses")
+    print("Fetching"+str(len(addrPool))+" addresses")
     for addr in addrPool:
         txs = list(api.getTransactions(addr,25))
         for tx in txs: # for every transaction of addr
