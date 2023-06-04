@@ -27,7 +27,6 @@ class BitcoinAPI:
             return []
         
         while(len(response) > 0 and len(txs) < maxTransactions):
-            print("txs:"+str(len(txs)))
             url = self.BASE_URL + 'address/' + str(address) + "/txs/chain/"+ response[-1]['txid']
             r = requests.get(url)
             if(r.status_code == 200):
