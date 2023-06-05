@@ -6,6 +6,9 @@ import networkx as nx
 from networkx.readwrite import json_graph
 from pyvis.network import Network
 import json
+import yaml
+import csv
+import pandas
 
 
 class RELATIONSHIP(Enum):
@@ -14,6 +17,9 @@ class RELATIONSHIP(Enum):
 
 api = BitcoinAPI()
 G = nx.DiGraph()
+
+with open('../config.yaml') as file:
+    config = yaml.load(file, Loader=yaml.FullLoader)
 
 usedTransactions = list()
 jupyterNotebook = False
@@ -30,14 +36,14 @@ def main(args):
         addrPool = json.load(ft)
 
     iteration = 1
-    for address in addrPool: 
+    for address in addrPool:
         G.add_node(address,color="#ff0000")
         G.nodes[address]['title'] = address
         G.nodes[address]['label'] = cutAddr(address)
     while(iteration <= depth):
         print("Iteration "+str(iteration)+"/"+str(depth))
         iteration += 1;
-        addrPool = createNeighborhood(addrPool)
+        addrPool = createNeighborhood(addrPool, args.enableColoring)
     
     print("Created a Network with "+str(len(G.nodes))+" Nodes and "+str(len(G.edges))+" Edges")
 
@@ -69,29 +75,40 @@ def main(args):
 #    "solver": "forceAtlas2Based"
 #  }
 #}""")
-        net.show(args.htmlOutput,notebook=jupyterNotebook)
+        net.show(args.htmlOutput)
         print("Done!")
     
-def draw(G,neighborhood,edgeTitle):
-    _vouts = list(neighborhood[RELATIONSHIP.VOUT])
-    _vins = list(neighborhood[RELATIONSHIP.VIN])
-    for _to in _vouts:
-        G.add_node(_to)
-        G.nodes[_to]['title'] =_to
-        G.nodes[_to]['label'] = cutAddr(_to)
-        for _from in _vins:
-            G.add_node(_from)
-            G.nodes[_from]['title'] = _from
-            G.nodes[_from]['label'] = cutAddr(_from)
-            G.add_edge(_from,_to)
-            G.edges[_from,_to]['title'] = edgeTitle
-
-    
+   
 def cutAddr(addr):
     return addr[0:4]+"..."+addr[-4:]
     
+def getType(addr):
+    df = pandas.read_csv(config["paths"]["data"]+"/data.csv", dtype={
+            'is_cluster_definer': 'str',
+            'category': 'str',
+            'actor': 'str'
+        })
+    if df['tags'].str.contains(addr).any():
+        return df[df['tags'].str.contains(addr)].to_dict()['title']
+    else:
+        return 'Unknown'
 
-def createNeighborhood(addrPool):
+def setColorByType(node_type):
+    nodeType = str(node_type)
+    if 'Ponzi Scheme' in nodeType:
+        return '#1ab124'
+    if 'Mixing Services' in nodeType:
+        return '#816231'
+    if 'Ransomware' in nodeType or 'Ransomwhere' in nodeType:
+        return '#7ff51c'
+    if 'Sextortion' in nodeType:
+        return '#9f2b68'
+    if 'Market' in nodeType:
+        return '#bb9311'
+    else:
+        return '#89cff0'
+
+def createNeighborhood(addrPool, enableColoring):
     #Get transactions for addr
     _newAddresses = set()
     print("Fetching " +str(len(addrPool))+" addresses")
@@ -115,13 +132,14 @@ def createNeighborhood(addrPool):
                         G.add_node(_from)
                         G.nodes[_from]['title'] = _from
                         G.nodes[_from]['label'] = cutAddr(_from)
+                        if enableColoring:
+                            nodeType = getType(_from)
+                            color = setColorByType(nodeType)
+                            G.nodes[_from]['description'] = nodeType
+                            G.nodes[_from]['color'] = color
                         G.add_edge(_from,_to)
                         G.edges[_from,_to]['title'] = tx["txid"]
     return list(_newAddresses)
-            
-    
-    
-
 
 
 if __name__ == '__main__':
@@ -142,7 +160,8 @@ if __name__ == '__main__':
                         help='Enable/Disable physics. Default is true', type=bool, required = False)
     parser.add_argument('-jupyter', '--jupyterNotebook',
                         help='Enable/Disable jupyter notebook mode. Default is false', type=bool, required = False)
-    
+    parser.add_argument('-color', '--enableColoring',
+                        help='Enable/Disable coloring. Default is false', type=bool, required = False, default = False) 
     args = parser.parse_args()
     main(args)
     
