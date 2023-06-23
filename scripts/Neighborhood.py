@@ -5,11 +5,12 @@ from enum import Enum
 import networkx as nx
 from networkx.readwrite import json_graph
 from pyvis.network import Network
+import modin.pandas as pd
 import json
 import yaml
 import csv
-import pandas
-
+import ray
+ray.init()
 
 class RELATIONSHIP(Enum):
     VOUT = 0
@@ -20,6 +21,12 @@ G = nx.DiGraph()
 
 with open('../config.yaml') as file:
     config = yaml.load(file, Loader=yaml.FullLoader)
+
+df = pd.read_csv(config["paths"]["data"]+"/data.csv", dtype={
+            'is_cluster_definer': 'str',
+            'category': 'str',
+            'actor': 'str'
+    })
 
 usedTransactions = list()
 jupyterNotebook = False
@@ -63,7 +70,7 @@ def main(args):
         
     if(args.htmlOutput != None):
         print("Creating "+args.htmlOutput+"...")
-        net.from_nx(G)
+        net.from_nx(G, default_edge_weight=1, show_edge_weights=True)
         net.show_buttons(filter_=['physics'])
         net.toggle_physics(physics)
 #        net.set_options("""const options = {      
@@ -83,11 +90,6 @@ def cutAddr(addr):
     return addr[0:4]+"..."+addr[-4:]
     
 def getType(addr):
-    df = pandas.read_csv(config["paths"]["data"]+"/data.csv", dtype={
-            'is_cluster_definer': 'str',
-            'category': 'str',
-            'actor': 'str'
-        })
     if df['tags'].str.contains(addr).any():
         return df[df['tags'].str.contains(addr)].to_dict()['title']
     else:
@@ -107,6 +109,22 @@ def setColorByType(node_type):
         return '#bb9311'
     else:
         return '#89cff0'
+
+def getRisk(src, dst, src_type):
+    srcType = str(src_type)
+    coefficient = 1
+    if 'Ponzi Scheme' in srcType:
+        coefficient = 2
+    if 'Mixing Services' in srcType:
+        coefficient = 2
+    if 'Ransomware' in srcType or 'Ransomwhere' in srcType:
+        coefficient = 2
+    if 'Sextortion' in srcType:
+        coefficient = 2
+    if 'Market' in srcType:
+        coefficient = 2
+
+    return coefficient
 
 def createNeighborhood(addrPool, enableColoring):
     #Get transactions for addr
@@ -132,13 +150,14 @@ def createNeighborhood(addrPool, enableColoring):
                         G.add_node(_from)
                         G.nodes[_from]['title'] = _from
                         G.nodes[_from]['label'] = cutAddr(_from)
+                        nodeType = getType(_from)
                         if enableColoring:
-                            nodeType = getType(_from)
                             color = setColorByType(nodeType)
                             G.nodes[_from]['description'] = nodeType
                             G.nodes[_from]['color'] = color
                         G.add_edge(_from,_to)
                         G.edges[_from,_to]['title'] = tx["txid"]
+                        G.edges[_from,_to]['value'] = getRisk(_from, _to, nodeType)
     return list(_newAddresses)
 
 
