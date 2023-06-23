@@ -32,9 +32,9 @@ usedTransactions = list()
 jupyterNotebook = False
 
 def main(args):
-    depth = args.depth if args.depth != None else 1;
-    jupyterNotebook = args.jupyterNotebook if args.jupyterNotebook  != None else False
-    physics = args.physics if args.physics  != None else True
+    depth = args.depth
+    jupyterNotebook = args.jupyterNotebook
+    physics = args.physics
     net = Network(directed=True,
                   neighborhood_highlight=True,
                   notebook=jupyterNotebook,
@@ -131,7 +131,7 @@ def createNeighborhood(addrPool, enableColoring):
     _newAddresses = set()
     print("Fetching " +str(len(addrPool))+" addresses")
     for addr in addrPool:
-        txs = list(api.getTransactions(addr, args.maxTransactions if args.maxTransactions != None else 25))
+        txs = list(api.getTransactions(addr, args.maxTransactions))
         print("Found "+str(len(txs))+" transactions for address " +addr)
         for tx in txs: # for every transaction of addr
             #Get its inputs and outputs
@@ -166,7 +166,7 @@ if __name__ == '__main__':
     parser.add_argument('-f', '--file',
                         help='Inputfile with wallet addresses', type=str, required = True)
     parser.add_argument('-d', '--depth',
-                        help='Neighbors distance (Default 1)', type=int, required = False)
+                        help='Neighbors distance (Default 1)', type=int, required = False, default = 1)
     parser.add_argument('-html', '--htmlOutput',
                         help='HTML Output file name', type=str, required = False)
     parser.add_argument('-json', '--jsonOutput',
@@ -174,11 +174,11 @@ if __name__ == '__main__':
     parser.add_argument('-t', '--transactionFile',
                         help='Output file that includes the used transactions for this network', type=str, required = False)
     parser.add_argument('-max', '--maxTransactions',
-                        help='Max transactions for each address. Should be a multiple of 25. (Default:25)', type=int, required = False)
+                        help='Max transactions for each address. Should be a multiple of 25. (Default:25)', type=int, required = False, default = 25)
     parser.add_argument('-physics', '--physics',
-                        help='Enable/Disable physics. Default is true', type=bool, required = False)
+                        help='Enable/Disable physics. Default is true', type=bool, required = False, default = True)
     parser.add_argument('-jupyter', '--jupyterNotebook',
-                        help='Enable/Disable jupyter notebook mode. Default is false', type=bool, required = False)
+                        help='Enable/Disable jupyter notebook mode. Default is false', type=bool, required = False, default = False)
     parser.add_argument('-color', '--enableColoring',
                         help='Enable/Disable coloring. Default is false', type=bool, required = False, default = False) 
     args = parser.parse_args()
