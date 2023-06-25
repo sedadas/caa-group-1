@@ -312,3 +312,5 @@ data/data.csv
 
 # Generated html
 *.html
+
+scripts/AccountRiskScore_Cache/
