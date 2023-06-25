@@ -14,13 +14,7 @@ import requests
 with open('../config.yaml') as file:
     config = yaml.load(file, Loader=yaml.FullLoader)
 
-data = pd.read_csv(config["paths"]["data"]+"/data.csv", dtype={
-            'is_cluster_definer': 'str',
-            'category': 'str',
-            'actor': 'str'
-    })
-
-data['address'] = list(map(lambda x: eval(x)['address'], data['tags']))
+data = pd.read_csv(config["paths"]["data"]+"/data.csv")
 BASE_URL = 'https://blockstream.info/api/'
 
 def main(args):
@@ -38,29 +32,33 @@ def recursive_upstream_search(tx_hash, depth, depth_max,score):
     if response.status_code == 200:
         tx = response.json()
     
-    inputs = tx["vin"]
-    print(f"depth {depth}, {len(inputs)} inputs")
-    if len(inputs) <= 40:
-        for j in range (len(inputs)) : 
-            addr =  inputs[j]['prevout']["scriptpubkey_address"]
-            if addr in data['address'].values :
-                print(f"illegal adress found upstream {addr} at depth {depth}")
-                for j in range (len(tx['vout'])):
-                    if tx['vin'][j]['prevout']['scriptpubkey_address'] == addr:
-                        satoshi_in = tx['vin'][j]['prevout']['value']
-                score_addr = satoshi_in/depth
-                print(score_addr)
-                depth = depth_max
-            else :
-                score_addr = 0
-            score = max(score,score_addr)
-
-            #print(f"{tx['txid']} --> {tx_i['txid']}")
-            if  depth < depth_max:
-                #recursive_search(tx_i['txid'],depth, depth_max, score)
-                score = max(score,recursive_upstream_search(inputs[j]['txid'], depth+1, depth_max, score))
-
-            #print(f"{addr} has not reused {tx['txid']}")
+        inputs = tx["vin"]
+        #print(f"depth {depth}, {len(inputs)} inputs")
+        if len(inputs) <= 40:
+            for j in range (len(inputs)) : 
+                addr =  inputs[j]['prevout']["scriptpubkey_address"]
+                if addr in data['address'].values :
+                    #print(f"illegal adress found upstream {addr} at depth {depth}")
+                    for vin in tx['vin']:
+                        if vin['prevout']['scriptpubkey_address'] == addr:
+                            satoshi_in = tx['vin'][j]['prevout']['value']
+                    score_addr = satoshi_in/depth
+                    #print(score_addr)
+                    depth = depth_max
+                else :
+                    score_addr = 0
+                score = max(score,score_addr)
+    
+                #print(f"{tx['txid']} --> {tx_i['txid']}")
+                if  depth < depth_max:
+                    #recursive_search(tx_i['txid'],depth, depth_max, score)
+                    score = max(score,recursive_upstream_search(inputs[j]['txid'], depth+1, depth_max, score))
+    
+                #print(f"{addr} has not reused {tx['txid']}")
+    else:
+        print(f"Failed to get {url} (HTTP STATUS {response.status_code} )")
+        return 0
+        
     return score
 
 def get_address_txs(address):

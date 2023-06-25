@@ -14,13 +14,7 @@ import requests
 with open('../config.yaml') as file:
     config = yaml.load(file, Loader=yaml.FullLoader)
 
-data = pd.read_csv(config["paths"]["data"]+"/data.csv", dtype={
-            'is_cluster_definer': 'str',
-            'category': 'str',
-            'actor': 'str'
-    })
-
-data['address'] = list(map(lambda x: eval(x)['address'], data['tags']))
+data = pd.read_csv(config["paths"]["data"]+"/data.csv")
 BASE_URL = 'https://blockstream.info/api/'
 
 def main(args):
@@ -37,33 +31,36 @@ def recursive_search(tx_hash, depth, depth_max,score):
     response = requests.get(url)
     if response.status_code == 200:
         tx = response.json()
+        output_adresses = list(map((lambda x:x["scriptpubkey_address"] if "scriptpubkey_address" in x else None),tx["vout"]))
+        #print(f"depth {depth}, {len(output_adresses)} output adresses")
+        if len(output_adresses) <= 10:
+            for addr in output_adresses : 
+                if addr in data['address'].values :
+                    #print(f"illegal adress found downstream {addr} at depth {depth}")
+                    for j in range (len(tx['vout'])):
+                        if tx['vout'][j]['scriptpubkey_address'] == addr:
+                            satoshi = tx['vout'][j]['value']
+                    score_addr = satoshi/depth
+                    depth = depth_max
+                else :
+                    score_addr = 0
+                score = max(score,score_addr)
+                
     
-    output_adresses = list(map((lambda x:x["scriptpubkey_address"] if "scriptpubkey_address" in x else None),tx["vout"]))
-    print(f"depth {depth}, {len(output_adresses)} output adresses")
-    if len(output_adresses) <= 10:
-        for addr in output_adresses : 
-            if addr in data['address'].values :
-                print(f"illegal adress found downstream {addr} at depth {depth}")
-                for j in range (len(tx['vout'])):
-                    if tx['vout'][j]['scriptpubkey_address'] == addr:
-                        satoshi = tx['vout'][j]['value']
-                score_addr = satoshi/depth
-                depth = depth_max
-            else :
-                score_addr = 0
-            score = max(score,score_addr)
-            
-
-            txs = get_address_txs(addr)
-            if txs is None :
-                print("none")
-            for i in range (len(txs)):
-                tx_i  = txs[i]
-                inputs = list(map(lambda x:x["txid"],tx_i["vin"]))
-                if tx['txid'] in inputs :
-                    #print(f"{tx['txid']} --> {tx_i['txid']}")
-                    if  depth < depth_max:
-                        score = max(score,recursive_search(tx_i['txid'], depth+1, depth_max, score))
+                txs = get_address_txs(addr)
+                if txs is None :
+                    print("none")
+                for i in range (len(txs)):
+                    tx_i  = txs[i]
+                    inputs = list(map(lambda x:x["txid"],tx_i["vin"]))
+                    if tx['txid'] in inputs :
+                        #print(f"{tx['txid']} --> {tx_i['txid']}")
+                        if  depth < depth_max:
+                            score = max(score,recursive_search(tx_i['txid'], depth+1, depth_max, score))
+    
+    else:
+        print(f"Failed to get {url} (HTTP STATUS {response.status_code} )")
+        return 0
 
     return score
 
