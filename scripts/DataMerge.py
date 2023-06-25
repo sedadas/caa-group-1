@@ -20,7 +20,7 @@ with open('../config.yaml') as file:
 
 def main(args):
     data = loadData()
-    data.to_csv(config["paths"]["data"]+"/data.csv")
+    data.to_csv(config["paths"]["data"]+"/data.csv",index=False)
     print("Created "+config["paths"]["data"]+"/data.csv")
     #data.to_csv(config["paths"]["data"]+"/"+ (args.output or "data.csv"))
     #print("Created "+config["paths"]["data"]+"/"+ (args.output or "data.csv"))
