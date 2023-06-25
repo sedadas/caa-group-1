@@ -50,7 +50,7 @@ def main(args):
     while(iteration <= depth):
         print("Iteration "+str(iteration)+"/"+str(depth))
         iteration += 1;
-        addrPool = createNeighborhood(addrPool, args.enableColoring)
+        addrPool = createNeighborhood(args,addrPool)
     
     print("Created a Network with "+str(len(G.nodes))+" Nodes and "+str(len(G.edges))+" Edges")
 
@@ -126,7 +126,7 @@ def getRisk(src, dst, src_type):
 
     return coefficient
 
-def createNeighborhood(addrPool, enableColoring):
+def createNeighborhood(args,addrPool):
     #Get transactions for addr
     _newAddresses = set()
     print("Fetching " +str(len(addrPool))+" addresses")
@@ -151,7 +151,7 @@ def createNeighborhood(addrPool, enableColoring):
                         G.nodes[_from]['title'] = _from
                         G.nodes[_from]['label'] = cutAddr(_from)
                         nodeType = getType(_from)
-                        if enableColoring:
+                        if args.enableColoring:
                             color = setColorByType(nodeType)
                             G.nodes[_from]['description'] = nodeType
                             G.nodes[_from]['color'] = color
