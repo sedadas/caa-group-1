@@ -90,7 +90,7 @@ def cutAddr(addr):
     return addr[0:4]+"..."+addr[-4:]
     
 def getType(addr):
-    if df['tags'].str.contains(addr).any():
+    if ('tags' in df) and (df['tags'].str.contains(addr).any()):
         return df[df['tags'].str.contains(addr)].to_dict()['title']
     else:
         return 'Unknown'
