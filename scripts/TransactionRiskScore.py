@@ -2,6 +2,9 @@
 from argparse import ArgumentParser
 from BitcoinAPI import BitcoinAPI
 from multiprocessing import Process, Pipe
+import Risk_scoring
+import Risk_scoring_upstream
+import traceback
 
 class TransactionRiskScore:
     api = BitcoinAPI()
@@ -17,23 +20,77 @@ class TransactionRiskScore:
         participants = self._getParticipants(txDetails)
         
         score = 0
+        pipes = []
+        processes = []
         #Calculate the Risk score for all participants
         for index, participant in enumerate(participants):
-            print("("+str((index+1))+"/"+str(len(participants))+") Calculating Risk Score for account '"+participant+"'")
+            print(f"Calculating Risk Score for account '{participant}'")
             parent_conn, child_conn = Pipe()
             process = Process(target=self._accountRiskScore,args=(child_conn,participant))
             process.start()
-            score += parent_conn.recv()
-            process.join()
+            processes.append(process)
+            pipes.append(parent_conn)
+            #processes += process
+            
+        while(len(pipes) > 0):
+            _pipes = []
+            for pipe in pipes:
+                if pipe.poll():
+                    score += pipe.recv()
+                else:
+                    _pipes.append(pipe)
+            pipes = _pipes
+
+        
+        for process in processes:
+            process.terminate()
             
         #return average
         return score/len(participants)
+    
+   # def _accountRiskScore(self,addr):
+   #     txs = self.api.getTransactions(addr, 25)
+   #     scoreUp = self._riskScoreUpstream(txs)
+   #     scoreDown = self._riskScoreDownstream(txs)
+   #     
+   #     scoreUp = scoreUp if scoreUp is not None else 0
+   #     scoreDown = scoreDown if scoreDown is not None else 0
+   #             
+   #     return scoreUp if scoreUp > scoreDown else scoreDown
         
     def _accountRiskScore(self,pipe,*addr):
         addr = ''.join(addr)
-        pipe.send(12345) #TODO: call func to get score of the account address.
-        pipe.close()
+        try:
+            txs = BitcoinAPI().getTransactions(addr, 25)
+            scoreUp = self._riskScoreUpstream(txs)
+            scoreDown = self._riskScoreDownstream(txs)
+            pipe.send(scoreUp if scoreUp > scoreDown else scoreDown)
+            print(f"Calculated Score for {addr}")
+            
+        except Exception as e:
+            print(f"Failed to calculate Score for {addr}:")
+            print(traceback.format_exc())
+            print("")
+            pipe.send(0)
+
         
+        
+    def _riskScoreDownstream(self,txs) -> int:
+        score = 0
+        for tx in txs:
+            _score = Risk_scoring.recursive_search(tx["txid"], 1, self.depth,0)
+            if _score > score:
+                score = _score
+        return score
+                
+                
+    def _riskScoreUpstream(self,txs) -> int:
+        score = 0
+        for tx in txs:
+            _score = score = Risk_scoring_upstream.recursive_upstream_search(tx["txid"], 1, self.depth,0)
+            if _score > score:
+                score = _score
+        return score
         
     def _getParticipants(self,txDetails):
         participants = []
@@ -53,7 +110,7 @@ class TransactionRiskScore:
 def main(args):
     print("____________TRANSACTION RISK SCORE____________")
     trs = TransactionRiskScore(args.depth)
-    print("FINAL SCORE:"+str(trs.score(args.transaction)));
+    print("FINAL SCORE:"+str(trs.score(args.transaction)),flush=True);
     
 if __name__ == '__main__':
     parser = ArgumentParser()
