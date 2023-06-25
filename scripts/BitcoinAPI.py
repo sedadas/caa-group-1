@@ -7,6 +7,16 @@ class BitcoinAPI:
     
     def getTransactions(self,address,maxTransactions):
         return self._get_address_txs_Retry(address, False, maxTransactions)
+    
+
+    def getTransaction(self,tx):
+       url = self.BASE_URL + 'tx/' + str(tx)
+       r = requests.get(url)
+       if(r.status_code == 200):
+           return json.loads(r.text)
+       else:
+           print("An Error occured trying to fetch transaction '"+str(tx)+"' (HTTP STATUS "+r.status_code+")")
+           return "";
         
         
     def _get_address_txs_Retry(self,address, retry, maxTransactions):

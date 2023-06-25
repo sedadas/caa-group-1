@@ -8,10 +8,12 @@
 #
 
 from argparse import ArgumentParser
-import pandas as pd
+import modin.pandas as pd
+import json
 import yaml
 import os
 import numpy as np
+import ray
 
 
 with open('../config.yaml') as file:
@@ -19,9 +21,22 @@ with open('../config.yaml') as file:
 
 
 def main(args):
+    startedRay = False
+    if not ray.is_initialized():
+        startedRay = True
+        ray.init()
+        
     data = loadData()
-    data.to_csv(config["paths"]["data"]+"/data.csv")
+    data = data.query("currency == 'BTC'")
+    
+    
+    data["address"] = data["tags"].apply(lambda x: x["address"],axis=1)
+    data = data.drop(["creator","is_cluster_definer","confidence","description","currency","label","lastmod","source","actor","abuse","tags"], axis=1)
+    data.to_csv(config["paths"]["data"]+"/data.csv",index=False)
+    
     print("Created "+config["paths"]["data"]+"/data.csv")
+    if startedRay:
+        ray.shutdown()
     #data.to_csv(config["paths"]["data"]+"/"+ (args.output or "data.csv"))
     #print("Created "+config["paths"]["data"]+"/"+ (args.output or "data.csv"))
 
