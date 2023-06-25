@@ -126,6 +126,16 @@ def getRisk(src, dst, src_type):
 
     return coefficient
 
+
+def _tryGetScriptPubkeyAddress(x):
+    try:
+        return x["scriptpubkey_address"]
+    except TypeError:
+        return None
+    except KeyError:
+        return None
+
+
 def createNeighborhood(args,addrPool):
     #Get transactions for addr
     _newAddresses = set()
@@ -135,8 +145,8 @@ def createNeighborhood(args,addrPool):
         print("Found "+str(len(txs))+" transactions for address " +addr)
         for tx in txs: # for every transaction of addr
             #Get its inputs and outputs
-            _vouts = list(map((lambda x:x["scriptpubkey_address"] if "scriptpubkey_address" in x else None),tx["vout"]))
-            _vins = list(map(lambda x:x["prevout"]["scriptpubkey_address"],tx["vin"]))
+            _vouts = list(map(lambda x:  _tryGetScriptPubkeyAddress(x),tx["vout"])) if "vout" in tx else []
+            _vins = list(map(lambda x: _tryGetScriptPubkeyAddress(x["prevout"]),tx["vin"])) if "vin" in tx else []
             print("Found "+str(len(_vins))+" inputs and "+str(len(_vouts))+" outputs in transaction "+tx["txid"])
             #create nodes and connect them
             for _to in _vouts:
@@ -146,18 +156,19 @@ def createNeighborhood(args,addrPool):
                     G.nodes[_to]['title'] =_to
                     G.nodes[_to]['label'] = cutAddr(_to)
                     for _from in _vins:
-                        _newAddresses.add(_from)
-                        G.add_node(_from)
-                        G.nodes[_from]['title'] = _from
-                        G.nodes[_from]['label'] = cutAddr(_from)
-                        nodeType = getType(_from)
-                        if args.enableColoring:
-                            color = setColorByType(nodeType)
-                            G.nodes[_from]['description'] = nodeType
-                            G.nodes[_from]['color'] = color
-                        G.add_edge(_from,_to)
-                        G.edges[_from,_to]['title'] = tx["txid"]
-                        G.edges[_from,_to]['value'] = getRisk(_from, _to, nodeType)
+                        if(_from != None):
+                            _newAddresses.add(_from)
+                            G.add_node(_from)
+                            G.nodes[_from]['title'] = _from
+                            G.nodes[_from]['label'] = cutAddr(_from)
+                            nodeType = getType(_from)
+                            if args.enableColoring:
+                                color = setColorByType(nodeType)
+                                G.nodes[_from]['description'] = nodeType
+                                G.nodes[_from]['color'] = color
+                            G.add_edge(_from,_to)
+                            G.edges[_from,_to]['title'] = tx["txid"]
+                            G.edges[_from,_to]['value'] = getRisk(_from, _to, nodeType)
     return list(_newAddresses)
 
 
