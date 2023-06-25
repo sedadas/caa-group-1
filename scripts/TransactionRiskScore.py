@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from argparse import ArgumentParser
 from BitcoinAPI import BitcoinAPI
-from multiprocessing.pool import ThreadPool
+from multiprocessing import Process, Pipe
 
 class TransactionRiskScore:
     api = BitcoinAPI()
@@ -18,18 +18,21 @@ class TransactionRiskScore:
         
         score = 0
         #Calculate the Risk score for all participants
-        self.threadPool = ThreadPool(len(participants))
         for index, participant in enumerate(participants):
             print("("+str((index+1))+"/"+str(len(participants))+") Calculating Risk Score for account '"+participant+"'")
-            async_result = self.threadPool.apply_async(self._accountRiskScore, (participant)) 
-            score += async_result.get()
+            parent_conn, child_conn = Pipe()
+            process = Process(target=self._accountRiskScore,args=(child_conn,participant))
+            process.start()
+            score += parent_conn.recv()
+            process.join()
             
         #return average
         return score/len(participants)
         
-    def _accountRiskScore(self,*addr):
+    def _accountRiskScore(self,pipe,*addr):
         addr = ''.join(addr)
-        return 12345 #TODO: call func to get score of the account address.
+        pipe.send(12345) #TODO: call func to get score of the account address.
+        pipe.close()
         
         
     def _getParticipants(self,txDetails):
