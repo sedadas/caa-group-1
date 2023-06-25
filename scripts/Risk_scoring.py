@@ -11,7 +11,15 @@ import pandas as pd
 import requests
 
 
-data = pd.read_csv('data/data.csv')
+with open('../config.yaml') as file:
+    config = yaml.load(file, Loader=yaml.FullLoader)
+
+data = pd.read_csv(config["paths"]["data"]+"/data.csv", dtype={
+            'is_cluster_definer': 'str',
+            'category': 'str',
+            'actor': 'str'
+    })
+
 data['address'] = list(map(lambda x: eval(x)['address'], data['tags']))
 BASE_URL = 'https://blockstream.info/api/'
 
@@ -35,7 +43,7 @@ def recursive_search(tx_hash, depth, depth_max,score):
     if len(output_adresses) <= 10:
         for addr in output_adresses : 
             if addr in data['address'].values :
-                print(f"illegal adress found downstream {addr} at depht {depth}")
+                print(f"illegal adress found downstream {addr} at depth {depth}")
                 for j in range (len(tx['vout'])):
                     if tx['vout'][j]['scriptpubkey_address'] == addr:
                         satoshi = tx['vout'][j]['value']
@@ -79,9 +87,6 @@ def get_address_txs(address):
         json_data = response.json()
         n = len(json_data)
     return txs
-    
-    
-
 
 
 if __name__ == '__main__':
