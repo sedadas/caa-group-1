@@ -24,7 +24,7 @@ def main(args):
     score = recursive_search(tx_hash, 1, depth_max,0)
     print(f"This transaction has a risk of {score}")
 
-def recursive_search(tx_hash, depth, depth_max,score):
+def recursive_search(tx_hash, depth, depth_max,score,graph,nodeQueue):
     BASE_URL = 'https://blockstream.info/api/'
     url = BASE_URL + 'tx/' + str(tx_hash) 
     
@@ -35,8 +35,18 @@ def recursive_search(tx_hash, depth, depth_max,score):
         #print(f"depth {depth}, {len(output_adresses)} output adresses")
         if len(output_adresses) <= 10:
             for addr in output_adresses : 
+                graph.add_node(addr)
+                graph.nodes[addr]['title'] = addr
+                graph.nodes[addr]['label'] = cutAddr(addr)
+                graph.add_edge(addr,nodeQueue[-1])
+                graph.edges[addr,nodeQueue[-1]]['title'] = tx_hash
                 if addr in data['address'].values :
-                    #print(f"illegal adress found downstream {addr} at depth {depth}")
+                    graph.nodes[addr]['color'] = "#c21206"
+                    for index in range (len(nodeQueue)):
+                        if index+1 < len(nodeQueue):
+                             graph.edges[nodeQueue[index+1],nodeQueue[index]]['color'] = "#c21206"
+                        else:
+                            graph.edges[addr,nodeQueue[index]]['color'] = "#c21206"
                     for j in range (len(tx['vout'])):
                         if 'scriptpubkey_address' in tx['vout'][j].keys():
                             if tx['vout'][j]['scriptpubkey_address'] == addr:
@@ -57,7 +67,8 @@ def recursive_search(tx_hash, depth, depth_max,score):
                     if tx['txid'] in inputs :
                         #print(f"{tx['txid']} --> {tx_i['txid']}")
                         if  depth < depth_max:
-                            score = max(score,recursive_search(tx_i['txid'], depth+1, depth_max, score))
+                            nodeQueue.append(addr)
+                            score = max(score,recursive_search(tx_i['txid'], depth+1, depth_max, score,graph,nodeQueue))
     
     else:
         print(f"Failed to get {url} (HTTP STATUS {response.status_code} )")
@@ -86,6 +97,8 @@ def get_address_txs(address):
         n = len(json_data)
     return txs
 
+def cutAddr(addr):
+    return addr[0:4]+"..."+addr[-4:]
 
 if __name__ == '__main__':
     parser = ArgumentParser()

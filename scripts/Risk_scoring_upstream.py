@@ -24,7 +24,7 @@ def main(args):
     score = recursive_upstream_search(tx_hash, 1, depth_max,0)
     print(f"This transaction has a risk of {score}")
 
-def recursive_upstream_search(tx_hash, depth, depth_max,score):
+def recursive_upstream_search(tx_hash, depth, depth_max,score,graph,nodeQueue):
     BASE_URL = 'https://blockstream.info/api/'
     url = BASE_URL + 'tx/' + str(tx_hash) 
     
@@ -38,8 +38,18 @@ def recursive_upstream_search(tx_hash, depth, depth_max,score):
             for j in range (len(inputs)) : 
                 if 'scriptpubkey_address' in inputs[j]['prevout'].keys():
                     addr =  inputs[j]['prevout']["scriptpubkey_address"]
+                    graph.add_node(addr)
+                    graph.nodes[addr]['title'] = addr
+                    graph.nodes[addr]['label'] = cutAddr(addr)
+                    graph.add_edge(nodeQueue[-1],addr)
+                    graph.edges[nodeQueue[-1],addr]['title'] = tx_hash
                     if addr in data['address'].values :
-                        #print(f"illegal adress found upstream {addr} at depth {depth}")
+                        graph.nodes[addr]['color'] = "#c21206"
+                        for index in range (len(nodeQueue)):
+                            if index+1 < len(nodeQueue):
+                                graph.edges[nodeQueue[index],nodeQueue[index+1]]['color'] = "#c21206"
+                            else:
+                                graph.edges[nodeQueue[index],addr]['color'] = "#c21206"
                         for vin in tx['vin']:
                             if 'scriptpubkey_address' in vin['prevout'].keys():
                                 if vin['prevout']['scriptpubkey_address'] == addr:
@@ -54,7 +64,8 @@ def recursive_upstream_search(tx_hash, depth, depth_max,score):
                 #print(f"{tx['txid']} --> {tx_i['txid']}")
                 if  depth < depth_max:
                     #recursive_search(tx_i['txid'],depth, depth_max, score)
-                    score = max(score,recursive_upstream_search(inputs[j]['txid'], depth+1, depth_max, score))
+                    nodeQueue.append(addr)
+                    score = max(score,recursive_upstream_search(inputs[j]['txid'], depth+1, depth_max, score,graph,nodeQueue))
     
                 #print(f"{addr} has not reused {tx['txid']}")
     else:
@@ -84,6 +95,8 @@ def get_address_txs(address):
         n = len(json_data)
     return txs
 
+def cutAddr(addr):
+    return addr[0:4]+"..."+addr[-4:]
 
 if __name__ == '__main__':
     parser = ArgumentParser()
