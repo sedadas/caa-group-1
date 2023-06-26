@@ -5,15 +5,24 @@ from multiprocessing import Process, Pipe
 import Risk_scoring
 import Risk_scoring_upstream
 import traceback
+import yaml
+import pandas
+
+
 
 class TransactionRiskScore:
     api = BitcoinAPI()
     threadPool = None
     depth = 0
+    data = None
+    config = None
     
     def __init__(self,depth):
         self.depth = depth
-        
+        with open('../config.yaml') as file:
+            self.config = yaml.load(file, Loader=yaml.FullLoader)
+            self.data = pandas.read_csv(self.config["paths"]["data"]+"/data.csv")
+            
     def score(self,tx):
         # For the Transaction, get its participants
         txDetails = self.api.getTransaction(tx)
@@ -24,13 +33,25 @@ class TransactionRiskScore:
         processes = []
         #Calculate the Risk score for all participants
         for index, participant in enumerate(participants):
-            print(f"Calculating Risk Score for account '{participant}'")
-            parent_conn, child_conn = Pipe()
-            process = Process(target=self._accountRiskScore,args=(child_conn,participant))
-            process.start()
-            processes.append(process)
-            pipes.append(parent_conn)
-            #processes += process
+            if self._isIllegalAddress(participant):
+                print(f"transaction contains an illegal adress ({participant})")
+                _satoshi = self._scoreForIllegalAddressParticipant(participant,txDetails)
+
+                if(_satoshi == 0):
+                    print(f"Failed to calculate Score for {participant}")
+                else:
+                    score += _satoshi/self.config["transactionRiskScore"]["illegalAddressDivisor"]
+                    
+                    
+
+                # If the Participant is an illegal address, its score gets Satoshi * 1.5
+            else:
+                print(f"Calculating Risk Score for account '{participant}'")
+                parent_conn, child_conn = Pipe()
+                process = Process(target=self._accountRiskScore,args=(child_conn,participant))
+                process.start()
+                processes.append(process)
+                pipes.append(parent_conn)
             
         while(len(pipes) > 0):
             _pipes = []
@@ -57,7 +78,21 @@ class TransactionRiskScore:
    #     scoreDown = scoreDown if scoreDown is not None else 0
    #             
    #     return scoreUp if scoreUp > scoreDown else scoreDown
-        
+   
+    def _scoreForIllegalAddressParticipant(self,participant,txDetails):
+        _satoshi = 0
+        for vout in txDetails["vout"]:
+            if "scriptpubkey_address" in vout and vout["scriptpubkey_address"] == participant:
+                _satoshi += vout["value"]
+        for vin in txDetails["vin"]:
+            if "prevout" in vin and "scriptpubkey_address" in vin["prevout"] and vin["prevout"]["scriptpubkey_address"] == participant:
+                _satoshi += vin["prevout"]["value"]
+        return _satoshi
+   
+    def _isIllegalAddress(self,addr):
+        return addr in self.data["address"].values
+    
+       
     def _accountRiskScore(self,pipe,*addr):
         addr = ''.join(addr)
         try:

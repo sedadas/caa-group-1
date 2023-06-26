@@ -1,3 +1,6 @@
 paths:
   data: "../data"
   tagpacks: "../data/graphsense-tagpacks"
+
+transactionRiskScore:
+  illegalAddressDivisor: 0.00001 # In case that one of the participants itself is an illegal address, its Risk Score will be Score = Satoshi / illegalAddressDivisor
