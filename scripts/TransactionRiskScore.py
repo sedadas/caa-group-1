@@ -18,7 +18,7 @@ class TransactionRiskScore:
         # For the Transaction, get its participants
         txDetails = self.api.getTransaction(tx)
         participants = self._getParticipants(txDetails)
-        
+        print(f"Number of participants {len(participants)}")
         score = 0
         pipes = []
         processes = []
@@ -61,7 +61,8 @@ class TransactionRiskScore:
     def _accountRiskScore(self,pipe,*addr):
         addr = ''.join(addr)
         try:
-            txs = BitcoinAPI().getTransactions(addr, 25)
+            txs = BitcoinAPI().getTransactions(addr, 100)
+            print(f"address {addr} has {len(txs)} transactions")
             scoreUp = self._riskScoreUpstream(txs)
             scoreDown = self._riskScoreDownstream(txs)
             pipe.send(scoreUp if scoreUp > scoreDown else scoreDown)
@@ -78,6 +79,8 @@ class TransactionRiskScore:
     def _riskScoreDownstream(self,txs) -> int:
         score = 0
         for tx in txs:
+            tx_id = tx["txid"]
+            print(f"Computing transaction {tx_id} Downstream score")
             _score = Risk_scoring.recursive_search(tx["txid"], 1, self.depth,0)
             if _score > score:
                 score = _score
@@ -87,6 +90,8 @@ class TransactionRiskScore:
     def _riskScoreUpstream(self,txs) -> int:
         score = 0
         for tx in txs:
+            tx_id = tx["txid"]
+            print(f"Computing transaction {tx_id} Upstream score")
             _score = score = Risk_scoring_upstream.recursive_upstream_search(tx["txid"], 1, self.depth,0)
             if _score > score:
                 score = _score
