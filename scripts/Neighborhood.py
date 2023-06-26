@@ -110,22 +110,6 @@ def setColorByType(node_type):
     else:
         return '#89cff0'
 
-def getRisk(src, dst, src_type):
-    srcType = str(src_type)
-    coefficient = 1
-    if 'Ponzi Scheme' in srcType:
-        coefficient = 2
-    if 'Mixing Services' in srcType:
-        coefficient = 2
-    if 'Ransomware' in srcType or 'Ransomwhere' in srcType:
-        coefficient = 2
-    if 'Sextortion' in srcType:
-        coefficient = 2
-    if 'Market' in srcType:
-        coefficient = 2
-
-    return coefficient
-
 
 def _tryGetScriptPubkeyAddress(x):
     try:
@@ -145,6 +129,7 @@ def createNeighborhood(args,addrPool):
         print("Found "+str(len(txs))+" transactions for address " +addr)
         for tx in txs: # for every transaction of addr
             #Get its inputs and outputs
+            print("transaction ", tx)
             _vouts = list(map(lambda x:  _tryGetScriptPubkeyAddress(x),tx["vout"])) if "vout" in tx else []
             _vins = list(map(lambda x: _tryGetScriptPubkeyAddress(x["prevout"]),tx["vin"])) if "vin" in tx else []
             print("Found "+str(len(_vins))+" inputs and "+str(len(_vouts))+" outputs in transaction "+tx["txid"])
@@ -168,7 +153,6 @@ def createNeighborhood(args,addrPool):
                                 G.nodes[_from]['color'] = color
                             G.add_edge(_from,_to)
                             G.edges[_from,_to]['title'] = tx["txid"]
-                            G.edges[_from,_to]['value'] = getRisk(_from, _to, nodeType)
     return list(_newAddresses)
 
 
