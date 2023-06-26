@@ -38,6 +38,7 @@ def recursive_search(tx_hash, depth, depth_max,score):
                 if addr in data['address'].values :
                     #print(f"illegal adress found downstream {addr} at depth {depth}")
                     for j in range (len(tx['vout'])):
+                        satoshi = 0
                         if 'scriptpubkey_address' in tx['vout'][j].keys():
                             if tx['vout'][j]['scriptpubkey_address'] == addr:
                                 satoshi = tx['vout'][j]['value']

@@ -61,7 +61,7 @@ class TransactionRiskScore:
     def _accountRiskScore(self,pipe,*addr):
         addr = ''.join(addr)
         try:
-            txs = BitcoinAPI().getTransactions(addr, 100)
+            txs = BitcoinAPI().getTransactions(addr, 20)
             print(f"address {addr} has {len(txs)} transactions")
             scoreUp = self._riskScoreUpstream(txs)
             scoreDown = self._riskScoreDownstream(txs)
