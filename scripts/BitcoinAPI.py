@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import requests
 import json
-import multiprocessing
-from joblib import Parallel, delayed
 
 class BitcoinAPI:
     BASE_URL = 'https://blockstream.info/api/'
@@ -35,30 +33,27 @@ class BitcoinAPI:
         else:
             print("Failed to get '"+str(url)+"', HTTP response is "+str(r.status_code))
             if(retry == False):
-                return self._get_address_txs_Retry(address,True)
-            return
-
-        num_cores = multiprocessing.cpu_count()
-        txs += Parallel(n_jobs=num_cores, prefer="threads")(delayed(self._get_single_address_tx)(address, txs, retry) for i in range(maxTransactions))
-        res = [x for x in txs if x]
-        return res
-
+                return self._get_address_txs_Retry(address,True,maxTransactions)
+            return []
         
-    def _get_single_address_tx(self, address, txs, retry):
-        url = self.BASE_URL + 'address/' + str(address) + "/txs/chain/"+ txs[-1]['txid']
-        r = requests.get(url)
-        if(r.status_code == 200):
-            response = json.loads(r.text)
-            if isinstance(response, list) and len(response) != 0:
-                return response[0]
-            return response
-        else:
-            print("Failed to get '"+str(url)+"', HTTP response is "+str(r.status_code))
-            if retry:
-                return self._get_single_tx(address, txs, retry)
-            return
+        while(len(response) > 0 and len(txs) < maxTransactions):
+            url = self.BASE_URL + 'address/' + str(address) + "/txs/chain/"+ response[-1]['txid']
+            r = requests.get(url)
+            if(r.status_code == 200):
+                response = json.loads(r.text)
+                txs += response
+            else:
+                print("Failed to get '"+str(url)+"', HTTP response is "+str(r.status_code))
+                if(retry == False):
+                    return self._get_address_txs_Retry(address,True,maxTransactions)
+                return []
+    
+        if(retry == True):
+            print("Retry was successful")
 
-
+        return txs
+        
+    
     def __str__(self):
         return self.BASE_URL
     
