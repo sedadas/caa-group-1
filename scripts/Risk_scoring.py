@@ -35,17 +35,18 @@ def recursive_search(tx_hash, depth, depth_max,score):
         #print(f"depth {depth}, {len(output_adresses)} output adresses")
         if len(output_adresses) <= 10:
             for addr in output_adresses : 
+                score_addr = 0
                 if addr in data['address'].values :
                     #print(f"illegal adress found downstream {addr} at depth {depth}")
+                    satoshi = 0
                     for j in range (len(tx['vout'])):
-                        satoshi = 0
                         if 'scriptpubkey_address' in tx['vout'][j].keys():
                             if tx['vout'][j]['scriptpubkey_address'] == addr:
                                 satoshi = tx['vout'][j]['value']
-                        score_addr = satoshi/depth
-                    depth = depth_max
-                else :
-                    score_addr = 0
+                                score_addr = satoshi/depth
+                                depth = depth_max
+                                j = len(tx['vout'])
+
                 score = max(score,score_addr)
                 
     
