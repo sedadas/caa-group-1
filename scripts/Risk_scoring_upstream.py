@@ -36,18 +36,20 @@ def recursive_upstream_search(tx_hash, depth, depth_max,score):
         #print(f"depth {depth}, {len(inputs)} inputs")
         if len(inputs) <= 40:
             for j in range (len(inputs)) : 
-                addr =  inputs[j]['prevout']["scriptpubkey_address"]
-                if addr in data['address'].values :
-                    #print(f"illegal adress found upstream {addr} at depth {depth}")
-                    for vin in tx['vin']:
-                        if vin['prevout']['scriptpubkey_address'] == addr:
-                            satoshi_in = tx['vin'][j]['prevout']['value']
-                    score_addr = satoshi_in/depth
-                    #print(score_addr)
-                    depth = depth_max
-                else :
-                    score_addr = 0
-                score = max(score,score_addr)
+                if 'scriptpubkey_address' in inputs[j]['prevout'].keys():
+                    addr =  inputs[j]['prevout']["scriptpubkey_address"]
+                    if addr in data['address'].values :
+                        #print(f"illegal adress found upstream {addr} at depth {depth}")
+                        for vin in tx['vin']:
+                            if 'scriptpubkey_address' in vin['prevout'].keys():
+                                if vin['prevout']['scriptpubkey_address'] == addr:
+                                    satoshi_in = tx['vin'][j]['prevout']['value']
+                        score_addr = satoshi_in/depth
+                        #print(score_addr)
+                        depth = depth_max
+                    else :
+                        score_addr = 0
+                    score = max(score,score_addr)
     
                 #print(f"{tx['txid']} --> {tx_i['txid']}")
                 if  depth < depth_max:

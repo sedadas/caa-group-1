@@ -5,53 +5,32 @@ from multiprocessing import Process, Pipe
 import Risk_scoring
 import Risk_scoring_upstream
 import traceback
-import yaml
-import pandas
-
-
 
 class TransactionRiskScore:
     api = BitcoinAPI()
     threadPool = None
     depth = 0
-    data = None
-    config = None
     
     def __init__(self,depth):
         self.depth = depth
-        with open('../config.yaml') as file:
-            self.config = yaml.load(file, Loader=yaml.FullLoader)
-            self.data = pandas.read_csv(self.config["paths"]["data"]+"/data.csv")
-            
+        
     def score(self,tx):
         # For the Transaction, get its participants
         txDetails = self.api.getTransaction(tx)
         participants = self._getParticipants(txDetails)
-        
+        print(f"Number of participants {len(participants)}")
         score = 0
         pipes = []
         processes = []
         #Calculate the Risk score for all participants
         for index, participant in enumerate(participants):
-            if self._isIllegalAddress(participant):
-                print(f"transaction contains an illegal adress ({participant})")
-                _satoshi = self._scoreForIllegalAddressParticipant(participant,txDetails)
-
-                if(_satoshi == 0):
-                    print(f"Failed to calculate Score for {participant}")
-                else:
-                    score += _satoshi/self.config["transactionRiskScore"]["illegalAddressDivisor"]
-                    
-                    
-
-                # If the Participant is an illegal address, its score gets Satoshi * 1.5
-            else:
-                print(f"Calculating Risk Score for account '{participant}'")
-                parent_conn, child_conn = Pipe()
-                process = Process(target=self._accountRiskScore,args=(child_conn,participant))
-                process.start()
-                processes.append(process)
-                pipes.append(parent_conn)
+            print(f"Calculating Risk Score for account '{participant}'")
+            parent_conn, child_conn = Pipe()
+            process = Process(target=self._accountRiskScore,args=(child_conn,participant))
+            process.start()
+            processes.append(process)
+            pipes.append(parent_conn)
+            #processes += process
             
         while(len(pipes) > 0):
             _pipes = []
@@ -78,25 +57,12 @@ class TransactionRiskScore:
    #     scoreDown = scoreDown if scoreDown is not None else 0
    #             
    #     return scoreUp if scoreUp > scoreDown else scoreDown
-   
-    def _scoreForIllegalAddressParticipant(self,participant,txDetails):
-        _satoshi = 0
-        for vout in txDetails["vout"]:
-            if "scriptpubkey_address" in vout and vout["scriptpubkey_address"] == participant:
-                _satoshi += vout["value"]
-        for vin in txDetails["vin"]:
-            if "prevout" in vin and "scriptpubkey_address" in vin["prevout"] and vin["prevout"]["scriptpubkey_address"] == participant:
-                _satoshi += vin["prevout"]["value"]
-        return _satoshi
-   
-    def _isIllegalAddress(self,addr):
-        return addr in self.data["address"].values
-    
-       
+        
     def _accountRiskScore(self,pipe,*addr):
         addr = ''.join(addr)
         try:
-            txs = BitcoinAPI().getTransactions(addr, 25)
+            txs = BitcoinAPI().getTransactions(addr, 20)
+            print(f"address {addr} has {len(txs)} transactions")
             scoreUp = self._riskScoreUpstream(txs)
             scoreDown = self._riskScoreDownstream(txs)
             pipe.send(scoreUp if scoreUp > scoreDown else scoreDown)
@@ -113,6 +79,8 @@ class TransactionRiskScore:
     def _riskScoreDownstream(self,txs) -> int:
         score = 0
         for tx in txs:
+            tx_id = tx["txid"]
+            print(f"Computing transaction {tx_id} Downstream score")
             _score = Risk_scoring.recursive_search(tx["txid"], 1, self.depth,0)
             if _score > score:
                 score = _score
@@ -122,6 +90,8 @@ class TransactionRiskScore:
     def _riskScoreUpstream(self,txs) -> int:
         score = 0
         for tx in txs:
+            tx_id = tx["txid"]
+            print(f"Computing transaction {tx_id} Upstream score")
             _score = score = Risk_scoring_upstream.recursive_upstream_search(tx["txid"], 1, self.depth,0)
             if _score > score:
                 score = _score

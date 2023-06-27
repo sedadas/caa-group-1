@@ -314,3 +314,4 @@ data/data.csv
 *.html
 
 scripts/AccountRiskScore_Cache/
+*.ipynb

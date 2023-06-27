@@ -33,7 +33,7 @@ class BitcoinAPI:
         else:
             print("Failed to get '"+str(url)+"', HTTP response is "+str(r.status_code))
             if(retry == False):
-                return self._get_address_txs_Retry(address,True)
+                return self._get_address_txs_Retry(address,True,maxTransactions)
             return []
         
         while(len(response) > 0 and len(txs) < maxTransactions):
@@ -45,7 +45,7 @@ class BitcoinAPI:
             else:
                 print("Failed to get '"+str(url)+"', HTTP response is "+str(r.status_code))
                 if(retry == False):
-                    return self._self_get_address_txs_Retry(address,True)
+                    return self._get_address_txs_Retry(address,True,maxTransactions)
                 return []
     
         if(retry == True):
