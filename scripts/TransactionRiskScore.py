@@ -132,12 +132,12 @@ class TransactionRiskScore:
     def _cutAddr(self,addr):
         return addr[0:4]+"..."+addr[-4:]
     
-    def _saveGraph(self):
+    def _saveGraph(self,fileName):
         net = Network(directed=True,
                   select_menu=True,
                   notebook=True,
                   neighborhood_highlight=True)
-        fileName="TransactionRiskScore.html"
+        fileName=fileName+".html"
         print("Creating graph...")
         net.from_nx(self.graph, default_edge_weight=1, show_edge_weights=True)
         net.show_buttons(filter_=['physics'])
@@ -149,7 +149,7 @@ def main(args):
     print("____________TRANSACTION RISK SCORE____________")
     trs = TransactionRiskScore(args.depth)
     print("FINAL SCORE:"+str(trs.score(args.transaction)),flush=True)
-    trs._saveGraph()
+    trs._saveGraph(args.transaction)
     
 if __name__ == '__main__':
     parser = ArgumentParser()
