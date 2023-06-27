@@ -52,8 +52,9 @@ def recursive_search(tx_hash, depth, depth_max,score,graph,nodeQueue):
                         if 'scriptpubkey_address' in tx['vout'][j].keys():
                             if tx['vout'][j]['scriptpubkey_address'] == addr:
                                 satoshi = tx['vout'][j]['value']
-                        score_addr = satoshi/depth
-                    depth = depth_max
+                                score_addr = satoshi/depth
+                                depth = depth_max
+                                j = len(tx['vout'])
                 else :
                     score_addr = 0
                 score = max(score,score_addr)
