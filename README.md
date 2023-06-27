@@ -44,6 +44,7 @@ A Neighbor of an give address is a bitcoin address that had a transaction with t
 
 ### DataMerge
 This Scripts loads all tagpack yaml files, merges them into one file and saves it as data.csv\
+It is needed to prepare the data for the TransactionRiskScore.\
 You can configure it within config.yaml:\
 config["paths"]["data"] is the output folder (where to save the data.csv)\
 config["paths"]["tagpacks"] is the folder with the tagpack yaml files\
