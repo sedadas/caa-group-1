@@ -38,15 +38,15 @@ def recursive_search(tx_hash, depth, depth_max,score,graph,nodeQueue):
                 graph.add_node(addr)
                 graph.nodes[addr]['title'] = addr
                 graph.nodes[addr]['label'] = cutAddr(addr)
-                graph.add_edge(addr,nodeQueue[-1])
-                graph.edges[addr,nodeQueue[-1]]['title'] = tx_hash
+                graph.add_edge(nodeQueue[-1],addr)
+                graph.edges[nodeQueue[-1],addr]['title'] = tx_hash
                 if addr in data['address'].values :
                     graph.nodes[addr]['color'] = "#c21206"
                     for index in range (len(nodeQueue)):
                         if index+1 < len(nodeQueue):
-                             graph.edges[nodeQueue[index+1],nodeQueue[index]]['color'] = "#c21206"
+                            graph.edges[nodeQueue[index],nodeQueue[index+1]]['color'] = "#c21206"
                         else:
-                            graph.edges[addr,nodeQueue[index]]['color'] = "#c21206"
+                            graph.edges[nodeQueue[index],addr]['color'] = "#c21206"
                     for j in range (len(tx['vout'])):
                         if 'scriptpubkey_address' in tx['vout'][j].keys():
                             if tx['vout'][j]['scriptpubkey_address'] == addr:
