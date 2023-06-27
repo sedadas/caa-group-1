@@ -23,24 +23,27 @@ Example of running command for clustering
 ```
 python ./scripts/clustering.py -o "data/clusters.json" -t "data/transactions.json"
 ```
+Exemple of running command for risk scoring upstream
+```
+python ./Risk_scoring_upstream.py -d 4 -tx "c277a6c3d2c32b2c75ceebaca140b2e9ca9a31b32f464b64a4b11ab858b81708"
+```
 
+Exemple of running command for Transaction risk scoring 
+```
+python ./TransactionRiskScore.py -d 3 -tx "e377ac9333e4527fa86d4e096525f7ca81e9fd6212237d8601a0ccae916de23c"
+```
 ## Scripts
 ### BitcoinAPI
 Client to fetch data from blockstream using Esplora HTTP API.
-### Neighborhood
-This script uses networkx and pyvis.network to create a graph of neighbors for a set of bitcoin addresses.\
-A Neighbor of an give address is a bitcoin address that had a transaction with the given address.
-| Argument | Meaning                                                                                                                                                                                                                       | Example                           | Required           |
-|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------|--------------------|
-| -f       | JSON File that includes the bitcoin addresses                                                                                                                                                                                 | -f "../data/input_addresses.json" | Yes                |
-| -d       | In how many iterations would you like to fetch the neighbors of the neighbors. 1 = You only fetch the neighbors of the given bitcoin addresses. 2 = You fetch the neighors of the given bitcoin addresses and there neighbors | -d 1                              | No (default 1)     |
-| -html    | Set this value if you like to get an graph. Name for the html file that shows the interactive created graph.                                                                                                                  | -html "graph.html"                | No                 |
-| -json    | Set this value if you like to get the graph exported as json. Name for the json file that contains the exported created graph                                                                                                 | -json "graph.json"                | No                 |
-| -t       | Set this value if you like to export a list of transactions that have been used to create this graph                                                                                                                          | -t "transactions.json"            | No                 |
-| -max     | Since an bitcoin address can gave thousands of transactions, specifiy an limit. Due to the docs of blockstream api, it should be a multiple of 25                                                                             | -max 25                           | No (default 25)    |
-| -pysics  | Enables the rendering of the graph                                                                                                                                                                                            | -physics false                    | No (default true)  |
-| -jupyter | Set this to true if you face troubles using jupyter notebook                                                                                                                                                                  | -jupyter true                     | No (default false) |
 
+### Risk scoring
+Computes the local downstream score of a transaction by exploring transactions downstream with less than 10 outputs within the depth limit set. Takes the following arguments -d (depth) and -tx transaction
+
+### Risk scoring upstream
+Computes the local upstream score of a transaction by exploring transactions upstream within the depth limit set. Takes the following arguments -d (depth) and -tx transaction
+
+### Transaction Risk score
+Computes the transaction risk score by averaging particpants account score. Account score is the highest upstream/downstream score of the addresses 20 most recent transactions.
 
 ### DataMerge
 This Scripts loads all tagpack yaml files, merges them into one file and saves it as data.csv\
