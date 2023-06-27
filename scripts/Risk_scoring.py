@@ -48,6 +48,7 @@ def recursive_search(tx_hash, depth, depth_max,score,graph,nodeQueue):
                         else:
                             graph.edges[nodeQueue[index],addr]['color'] = "#c21206"
                     for j in range (len(tx['vout'])):
+                        satoshi = 0
                         if 'scriptpubkey_address' in tx['vout'][j].keys():
                             if tx['vout'][j]['scriptpubkey_address'] == addr:
                                 satoshi = tx['vout'][j]['value']

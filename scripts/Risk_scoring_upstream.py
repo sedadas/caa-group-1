@@ -45,6 +45,7 @@ def recursive_upstream_search(tx_hash, depth, depth_max,score,graph,nodeQueue):
                     graph.edges[addr,nodeQueue[-1]]['title'] = tx_hash
                     if addr in data['address'].values :
                         graph.nodes[addr]['color'] = "#c21206"
+                        satoshi_in = 0
                         for index in range (len(nodeQueue)):
                             if index+1 < len(nodeQueue):
                                 graph.edges[nodeQueue[index+1],nodeQueue[index]]['color'] = "#c21206"
