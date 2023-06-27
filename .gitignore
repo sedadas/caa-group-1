@@ -313,5 +313,17 @@ data/data.csv
 # Generated html
 *.html
 
+
 scripts/AccountRiskScore_Cache/
 *.ipynb
+
+# results
+!.data/results/a4f7df3b932b5a321a9523135c9cfab39107e8b4c79e7f643cba8ee47e6eb3c3.html
+!.data/results/7660c3c260148a231455c5978762a935b048860bf740da469bf1f247b9bd5518.html
+!.data/results/8c3734848cfe8bcbf71c9b1ad4dc7211303242402a1d529f8e7c37aaff9aab71.html
+!.data/results/lib/bindings/utils.js
+!.data/results/lib/bindings/tom-select/tom-select.complete.min.js
+!.data/results/lib/bindings/vis-9.1.2/vis-network.css
+!.data/results/lib/bindings/vis-9.1.2/vis-network.min.js
+
+
