@@ -1,0 +1,361 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+                <link href="lib/tom-select/tom-select.css" rel="stylesheet">
+                <script src="lib/tom-select/tom-select.complete.min.js"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+             #config {
+                 float: left;
+                 width: 400px;
+                 height: 600px;
+             }
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="18yXaf6HErMp26BEZwe8rCRJJMH5XMcvve">18yXaf6HErMp26BEZwe8rCRJJMH5XMcvve</option>
+                                
+                                    <option value="1Ee9ZiZkmygAXUiyeYKRSA3tLe4vNYEAgA">1Ee9ZiZkmygAXUiyeYKRSA3tLe4vNYEAgA</option>
+                                
+                                    <option value="17Q26xzqXo1cf5GHGjWGeyR73df8KLyEtn">17Q26xzqXo1cf5GHGjWGeyR73df8KLyEtn</option>
+                                
+                                    <option value="1L5nHdAdAD9uGcVgrjv3TVMTPPMpDw5vQq">1L5nHdAdAD9uGcVgrjv3TVMTPPMpDw5vQq</option>
+                                
+                                    <option value="1JwWLvfCvkFGepfsyYLLBES8LRVB3N4Dey">1JwWLvfCvkFGepfsyYLLBES8LRVB3N4Dey</option>
+                                
+                                    <option value="1AXJqXfDJyUEmx5cRAWB8ZL44NJoGAc7JH">1AXJqXfDJyUEmx5cRAWB8ZL44NJoGAc7JH</option>
+                                
+                                    <option value="13fMYmzE2KQGXs94YqWAhkH3orLD732x4V">13fMYmzE2KQGXs94YqWAhkH3orLD732x4V</option>
+                                
+                                    <option value="1BX8KdFCDVMPaKZmeCtnQofSWJ9qAFZAY1">1BX8KdFCDVMPaKZmeCtnQofSWJ9qAFZAY1</option>
+                                
+                                    <option value="1LrRsG7TGELTJubX3D72oAP2Pt8PRMvHmp">1LrRsG7TGELTJubX3D72oAP2Pt8PRMvHmp</option>
+                                
+                                    <option value="1NSDY5p8huorYpbhpfJxpMPcohswJLiC53">1NSDY5p8huorYpbhpfJxpMPcohswJLiC53</option>
+                                
+                                    <option value="176vkzrD8xKjhs1dm7ZBLLvDaCVMd5UzFR">176vkzrD8xKjhs1dm7ZBLLvDaCVMd5UzFR</option>
+                                
+                                    <option value="1BQ1qf3s9pEZWkG3WaY9jv8CCX97xkaLP6">1BQ1qf3s9pEZWkG3WaY9jv8CCX97xkaLP6</option>
+                                
+                                    <option value="1PyLvZsYKFqCxYz8xYVh72cuW4dNm8o139">1PyLvZsYKFqCxYz8xYVh72cuW4dNm8o139</option>
+                                
+                                    <option value="1DK9KYkqJRyGQFAuBLNTZ7Txdjk4DDrfZJ">1DK9KYkqJRyGQFAuBLNTZ7Txdjk4DDrfZJ</option>
+                                
+                                    <option value="1GaQzQpzkzfLcfbhXUBtw9HjXaLLzuj3ea">1GaQzQpzkzfLcfbhXUBtw9HjXaLLzuj3ea</option>
+                                
+                                    <option value="1MnxDihvnPtmyv6VrsApn5kCWhLhxgJu3B">1MnxDihvnPtmyv6VrsApn5kCWhLhxgJu3B</option>
+                                
+                                    <option value="1Dg24RCq51dWUQvurPB3E2cpiU32Gi6kht">1Dg24RCq51dWUQvurPB3E2cpiU32Gi6kht</option>
+                                
+                                    <option value="1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD">1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD</option>
+                                
+                                    <option value="1P1mRyrQ73mKxhuKjPQz6UbLNhZFhW4AD9">1P1mRyrQ73mKxhuKjPQz6UbLNhZFhW4AD9</option>
+                                
+                                    <option value="122QtHg8ytaWf4xuKCa169rDj5FUg7Ph7L">122QtHg8ytaWf4xuKCa169rDj5FUg7Ph7L</option>
+                                
+                                    <option value="18nFHs2wBb9ocHnaFwaJrpZrFqVYGLXfVV">18nFHs2wBb9ocHnaFwaJrpZrFqVYGLXfVV</option>
+                                
+                                    <option value="13Pp8tsMXU3dzvuiTbzLYEbbygZFJPUKhr">13Pp8tsMXU3dzvuiTbzLYEbbygZFJPUKhr</option>
+                                
+                                    <option value="1FnYXMbBw8rUW6JXWXPHKbXQh5o4TTVKh2">1FnYXMbBw8rUW6JXWXPHKbXQh5o4TTVKh2</option>
+                                
+                                    <option value="14gdrFWZUWpTZc8RSTBgXxxrBm8N3jp1Ac">14gdrFWZUWpTZc8RSTBgXxxrBm8N3jp1Ac</option>
+                                
+                                    <option value="1NVSf1NaS6YgqrvnuxbzJWFeq5KaJNh4X8">1NVSf1NaS6YgqrvnuxbzJWFeq5KaJNh4X8</option>
+                                
+                                    <option value="16Kk1DTbSK7SrzKE268CAFocV1u3ZqtjKk">16Kk1DTbSK7SrzKE268CAFocV1u3ZqtjKk</option>
+                                
+                                    <option value="1Ge1uiC7RSVGGD3foaLXLyii4VJNvaHLpD">1Ge1uiC7RSVGGD3foaLXLyii4VJNvaHLpD</option>
+                                
+                                    <option value="1Pf93S7fNNHcRcVHVPuJzwG1x5HzCXD31H">1Pf93S7fNNHcRcVHVPuJzwG1x5HzCXD31H</option>
+                                
+                                    <option value="1DicSF7Phr7qrgm1QEeSB9sSfBtJBUMQgX">1DicSF7Phr7qrgm1QEeSB9sSfBtJBUMQgX</option>
+                                
+                                    <option value="13BUrmg3xYiZyanznqK1DHvMYdGPAGafbx">13BUrmg3xYiZyanznqK1DHvMYdGPAGafbx</option>
+                                
+                                    <option value="1J3PtFcR5C9CaG84VFWy2qgafpReSrxNgB">1J3PtFcR5C9CaG84VFWy2qgafpReSrxNgB</option>
+                                
+                                    <option value="1PANRuwAet9F6WSVZLC2fkuxTeMFxvdzFZ">1PANRuwAet9F6WSVZLC2fkuxTeMFxvdzFZ</option>
+                                
+                                    <option value="18827DZkxSiq7kKrrJ7Zd6RcvV4JrqJPqM">18827DZkxSiq7kKrrJ7Zd6RcvV4JrqJPqM</option>
+                                
+                                    <option value="17DE5xrhxdHZz9NtwQeWKWojc6GvKQdmEY">17DE5xrhxdHZz9NtwQeWKWojc6GvKQdmEY</option>
+                                
+                                    <option value="1GsSzXPqyEuRMk4CrJNDAsaRLZVG4NBaZE">1GsSzXPqyEuRMk4CrJNDAsaRLZVG4NBaZE</option>
+                                
+                                    <option value="14J6kU4Di1x8J26E1emRf2k14vmY8Z46B6">14J6kU4Di1x8J26E1emRf2k14vmY8Z46B6</option>
+                                
+                                    <option value="1BghQkWhDXNcHzZXLiKYceDMdzpWyzE16i">1BghQkWhDXNcHzZXLiKYceDMdzpWyzE16i</option>
+                                
+                                    <option value="1Mhun8dAqnDfpgVMHaVyVzAfsBM46AUwtU">1Mhun8dAqnDfpgVMHaVyVzAfsBM46AUwtU</option>
+                                
+                                    <option value="161PvdQ3AvBk5rTXGxNQ3cVEaJBMasFjZG">161PvdQ3AvBk5rTXGxNQ3cVEaJBMasFjZG</option>
+                                
+                                    <option value="1JNmuKjihiWGV44QAn4boD89dBJLqLM1g2">1JNmuKjihiWGV44QAn4boD89dBJLqLM1g2</option>
+                                
+                                    <option value="13rRDzSFjifbaY9sa6c8bQDzJDUxSPYnpx">13rRDzSFjifbaY9sa6c8bQDzJDUxSPYnpx</option>
+                                
+                                    <option value="1yVQ1AKnAu6eeyvYcjW125EXTYbnaU4zC">1yVQ1AKnAu6eeyvYcjW125EXTYbnaU4zC</option>
+                                
+                                    <option value="1JNwXAY8WRrZPZ38MBN7SHGWNPJWuyLmLb">1JNwXAY8WRrZPZ38MBN7SHGWNPJWuyLmLb</option>
+                                
+                                    <option value="1Fb7QNstHt93FTLzTe15ZVzyDmvTKrvyC5">1Fb7QNstHt93FTLzTe15ZVzyDmvTKrvyC5</option>
+                                
+                                    <option value="1Ahb665Y2VwyUskeT4DtmRHJBav57XmXKG">1Ahb665Y2VwyUskeT4DtmRHJBav57XmXKG</option>
+                                
+                                    <option value="12YpttxmH3WUkigNVwoqG2ZDSzAK42kTE8">12YpttxmH3WUkigNVwoqG2ZDSzAK42kTE8</option>
+                                
+                                    <option value="19FUFDvrZHQaECBxDUi5A6vnYKrVHxBq9J">19FUFDvrZHQaECBxDUi5A6vnYKrVHxBq9J</option>
+                                
+                                    <option value="1P6jqvQazaSbAEc1f5KVPnEgQMMXR3tCZ5">1P6jqvQazaSbAEc1f5KVPnEgQMMXR3tCZ5</option>
+                                
+                                    <option value="1ChMRpQF8KivTjZoe8vWK7AMWon6ZW7xdN">1ChMRpQF8KivTjZoe8vWK7AMWon6ZW7xdN</option>
+                                
+                                    <option value="17ZyGXjLyoFU6V21q7cQa35Nxo3bCk7uXE">17ZyGXjLyoFU6V21q7cQa35Nxo3bCk7uXE</option>
+                                
+                                    <option value="1GHDv2EQ99QFtH6rPjju2e91QEXPFbxrTB">1GHDv2EQ99QFtH6rPjju2e91QEXPFbxrTB</option>
+                                
+                                    <option value="13tZveKo9TbBqnAhzXF84yT3EBwDopd3LN">13tZveKo9TbBqnAhzXF84yT3EBwDopd3LN</option>
+                                
+                                    <option value="1PTdz6PQk61zALEM2475sPGNVCoTcLLvjm">1PTdz6PQk61zALEM2475sPGNVCoTcLLvjm</option>
+                                
+                                    <option value="15HDbWapPJKUbgmsWnDxgmoLzMwjHtNFiR">15HDbWapPJKUbgmsWnDxgmoLzMwjHtNFiR</option>
+                                
+                                    <option value="1EcwshfQQEUS4Rmzypi858j2655mqaF86D">1EcwshfQQEUS4Rmzypi858j2655mqaF86D</option>
+                                
+                                    <option value="1CvghS8J7bkqbsNXbMSnhGhmXAG9PzFvdo">1CvghS8J7bkqbsNXbMSnhGhmXAG9PzFvdo</option>
+                                
+                                    <option value="18pZSGdxpp6z3BG5sYxDQf3XhzN9x8T32A">18pZSGdxpp6z3BG5sYxDQf3XhzN9x8T32A</option>
+                                
+                                    <option value="152RJBC6qfyF8qLpTb5pRyc1BSjBNURaKa">152RJBC6qfyF8qLpTb5pRyc1BSjBNURaKa</option>
+                                
+                                    <option value="14dES6aEFRDHhBShFoLESeFTtVdjVpfXCc">14dES6aEFRDHhBShFoLESeFTtVdjVpfXCc</option>
+                                
+                                    <option value="19FajiVgS75nsvTmyfV8HVcUYRRegpnbJu">19FajiVgS75nsvTmyfV8HVcUYRRegpnbJu</option>
+                                
+                                    <option value="1MQ4fX3tCiEfn3rbDNDTxNDKnzRBPogmAm">1MQ4fX3tCiEfn3rbDNDTxNDKnzRBPogmAm</option>
+                                
+                                    <option value="1DJjRNxu8u5v4jFW3QeRgUFyLBFGt4NGJc">1DJjRNxu8u5v4jFW3QeRgUFyLBFGt4NGJc</option>
+                                
+                                    <option value="1A4JvkDoZQmQasKzjBTrdZK1NkhH9UCY9U">1A4JvkDoZQmQasKzjBTrdZK1NkhH9UCY9U</option>
+                                
+                                    <option value="19vSpV4GpjU2PXPTrjyT6pk3H6dDyUMCVS">19vSpV4GpjU2PXPTrjyT6pk3H6dDyUMCVS</option>
+                                
+                                    <option value="13Fjt8w1owGcAExg1xzd361EAm5wH4PK4x">13Fjt8w1owGcAExg1xzd361EAm5wH4PK4x</option>
+                                
+                                    <option value="1AbEQbwtFC27UBZtpzijfJLd5mT2bN2sN7">1AbEQbwtFC27UBZtpzijfJLd5mT2bN2sN7</option>
+                                
+                                    <option value="1Av9andHtqJ4mTX6qa3S8UAKQ2H3kgPfMP">1Av9andHtqJ4mTX6qa3S8UAKQ2H3kgPfMP</option>
+                                
+                                    <option value="188T1VGqbeawp4GM2wQVNqBEdM1FhACnVZ">188T1VGqbeawp4GM2wQVNqBEdM1FhACnVZ</option>
+                                
+                                    <option value="1Po1oXMCWobE6kxWr8rJEP1SRq71JSD3t4">1Po1oXMCWobE6kxWr8rJEP1SRq71JSD3t4</option>
+                                
+                                    <option value="14ZiZB3j3MBhWvgR75QLqAjAmMQ8hbonma">14ZiZB3j3MBhWvgR75QLqAjAmMQ8hbonma</option>
+                                
+                                    <option value="1DMDUbPeKd8MTVZm2523DHYNAwQUoysZEh">1DMDUbPeKd8MTVZm2523DHYNAwQUoysZEh</option>
+                                
+                                    <option value="15rHomWLjU7y4MusPMYcpHJMZQkrGktXAA">15rHomWLjU7y4MusPMYcpHJMZQkrGktXAA</option>
+                                
+                                    <option value="1KhRjhvuvaS3V2QLa1oVNAahhZpfkxA6QH">1KhRjhvuvaS3V2QLa1oVNAahhZpfkxA6QH</option>
+                                
+                                    <option value="1EfQ3z9p4YBwXdmqEznok2NUY1aB3H2GJo">1EfQ3z9p4YBwXdmqEznok2NUY1aB3H2GJo</option>
+                                
+                                    <option value="1LzTrwqCP8zgDdaUup1hnEdmnCLAefXDJi">1LzTrwqCP8zgDdaUup1hnEdmnCLAefXDJi</option>
+                                
+                                    <option value="1MDyyyjHPNTMvMePcQRS2YQsFv8VQM3hN6">1MDyyyjHPNTMvMePcQRS2YQsFv8VQM3hN6</option>
+                                
+                                    <option value="12Py7XeXYTMXD8FW5881ziDqc2pakkoW2Q">12Py7XeXYTMXD8FW5881ziDqc2pakkoW2Q</option>
+                                
+                                    <option value="1B84NRtZNMyvFHfhFvMNK4zSXvpEhU5DSY">1B84NRtZNMyvFHfhFvMNK4zSXvpEhU5DSY</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+            <div id="config"></div>
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#2e2bfc", "id": "18yXaf6HErMp26BEZwe8rCRJJMH5XMcvve", "label": "18yX...cvve", "shape": "dot", "size": 10, "title": "18yXaf6HErMp26BEZwe8rCRJJMH5XMcvve"}, {"color": "#c21206", "id": "1Ee9ZiZkmygAXUiyeYKRSA3tLe4vNYEAgA", "label": "1Ee9...EAgA", "shape": "dot", "size": 10, "title": "1Ee9ZiZkmygAXUiyeYKRSA3tLe4vNYEAgA"}, {"color": "#97c2fc", "id": "17Q26xzqXo1cf5GHGjWGeyR73df8KLyEtn", "label": "17Q2...yEtn", "shape": "dot", "size": 10, "title": "17Q26xzqXo1cf5GHGjWGeyR73df8KLyEtn"}, {"color": "#97c2fc", "id": "1L5nHdAdAD9uGcVgrjv3TVMTPPMpDw5vQq", "label": "1L5n...5vQq", "shape": "dot", "size": 10, "title": "1L5nHdAdAD9uGcVgrjv3TVMTPPMpDw5vQq"}, {"color": "#2e2bfc", "id": "1JwWLvfCvkFGepfsyYLLBES8LRVB3N4Dey", "label": "1JwW...4Dey", "shape": "dot", "size": 10, "title": "1JwWLvfCvkFGepfsyYLLBES8LRVB3N4Dey"}, {"color": "#97c2fc", "id": "1AXJqXfDJyUEmx5cRAWB8ZL44NJoGAc7JH", "label": "1AXJ...c7JH", "shape": "dot", "size": 10, "title": "1AXJqXfDJyUEmx5cRAWB8ZL44NJoGAc7JH"}, {"color": "#97c2fc", "id": "13fMYmzE2KQGXs94YqWAhkH3orLD732x4V", "label": "13fM...2x4V", "shape": "dot", "size": 10, "title": "13fMYmzE2KQGXs94YqWAhkH3orLD732x4V"}, {"color": "#97c2fc", "id": "1BX8KdFCDVMPaKZmeCtnQofSWJ9qAFZAY1", "label": "1BX8...ZAY1", "shape": "dot", "size": 10, "title": "1BX8KdFCDVMPaKZmeCtnQofSWJ9qAFZAY1"}, {"color": "#97c2fc", "id": "1LrRsG7TGELTJubX3D72oAP2Pt8PRMvHmp", "label": "1LrR...vHmp", "shape": "dot", "size": 10, "title": "1LrRsG7TGELTJubX3D72oAP2Pt8PRMvHmp"}, {"color": "#97c2fc", "id": "1NSDY5p8huorYpbhpfJxpMPcohswJLiC53", "label": "1NSD...iC53", "shape": "dot", "size": 10, "title": "1NSDY5p8huorYpbhpfJxpMPcohswJLiC53"}, {"color": "#97c2fc", "id": "176vkzrD8xKjhs1dm7ZBLLvDaCVMd5UzFR", "label": "176v...UzFR", "shape": "dot", "size": 10, "title": "176vkzrD8xKjhs1dm7ZBLLvDaCVMd5UzFR"}, {"color": "#97c2fc", "id": "1BQ1qf3s9pEZWkG3WaY9jv8CCX97xkaLP6", "label": "1BQ1...aLP6", "shape": "dot", "size": 10, "title": "1BQ1qf3s9pEZWkG3WaY9jv8CCX97xkaLP6"}, {"color": "#97c2fc", "id": "1PyLvZsYKFqCxYz8xYVh72cuW4dNm8o139", "label": "1PyL...o139", "shape": "dot", "size": 10, "title": "1PyLvZsYKFqCxYz8xYVh72cuW4dNm8o139"}, {"color": "#97c2fc", "id": "1DK9KYkqJRyGQFAuBLNTZ7Txdjk4DDrfZJ", "label": "1DK9...rfZJ", "shape": "dot", "size": 10, "title": "1DK9KYkqJRyGQFAuBLNTZ7Txdjk4DDrfZJ"}, {"color": "#97c2fc", "id": "1GaQzQpzkzfLcfbhXUBtw9HjXaLLzuj3ea", "label": "1GaQ...j3ea", "shape": "dot", "size": 10, "title": "1GaQzQpzkzfLcfbhXUBtw9HjXaLLzuj3ea"}, {"color": "#97c2fc", "id": "1MnxDihvnPtmyv6VrsApn5kCWhLhxgJu3B", "label": "1Mnx...Ju3B", "shape": "dot", "size": 10, "title": "1MnxDihvnPtmyv6VrsApn5kCWhLhxgJu3B"}, {"color": "#97c2fc", "id": "1Dg24RCq51dWUQvurPB3E2cpiU32Gi6kht", "label": "1Dg2...6kht", "shape": "dot", "size": 10, "title": "1Dg24RCq51dWUQvurPB3E2cpiU32Gi6kht"}, {"color": "#97c2fc", "id": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "label": "1Po9...8BVD", "shape": "dot", "size": 10, "title": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD"}, {"color": "#97c2fc", "id": "1P1mRyrQ73mKxhuKjPQz6UbLNhZFhW4AD9", "label": "1P1m...4AD9", "shape": "dot", "size": 10, "title": "1P1mRyrQ73mKxhuKjPQz6UbLNhZFhW4AD9"}, {"color": "#97c2fc", "id": "122QtHg8ytaWf4xuKCa169rDj5FUg7Ph7L", "label": "122Q...Ph7L", "shape": "dot", "size": 10, "title": "122QtHg8ytaWf4xuKCa169rDj5FUg7Ph7L"}, {"color": "#97c2fc", "id": "18nFHs2wBb9ocHnaFwaJrpZrFqVYGLXfVV", "label": "18nF...XfVV", "shape": "dot", "size": 10, "title": "18nFHs2wBb9ocHnaFwaJrpZrFqVYGLXfVV"}, {"color": "#97c2fc", "id": "13Pp8tsMXU3dzvuiTbzLYEbbygZFJPUKhr", "label": "13Pp...UKhr", "shape": "dot", "size": 10, "title": "13Pp8tsMXU3dzvuiTbzLYEbbygZFJPUKhr"}, {"color": "#97c2fc", "id": "1FnYXMbBw8rUW6JXWXPHKbXQh5o4TTVKh2", "label": "1FnY...VKh2", "shape": "dot", "size": 10, "title": "1FnYXMbBw8rUW6JXWXPHKbXQh5o4TTVKh2"}, {"color": "#97c2fc", "id": "14gdrFWZUWpTZc8RSTBgXxxrBm8N3jp1Ac", "label": "14gd...p1Ac", "shape": "dot", "size": 10, "title": "14gdrFWZUWpTZc8RSTBgXxxrBm8N3jp1Ac"}, {"color": "#97c2fc", "id": "1NVSf1NaS6YgqrvnuxbzJWFeq5KaJNh4X8", "label": "1NVS...h4X8", "shape": "dot", "size": 10, "title": "1NVSf1NaS6YgqrvnuxbzJWFeq5KaJNh4X8"}, {"color": "#97c2fc", "id": "16Kk1DTbSK7SrzKE268CAFocV1u3ZqtjKk", "label": "16Kk...tjKk", "shape": "dot", "size": 10, "title": "16Kk1DTbSK7SrzKE268CAFocV1u3ZqtjKk"}, {"color": "#97c2fc", "id": "1Ge1uiC7RSVGGD3foaLXLyii4VJNvaHLpD", "label": "1Ge1...HLpD", "shape": "dot", "size": 10, "title": "1Ge1uiC7RSVGGD3foaLXLyii4VJNvaHLpD"}, {"color": "#97c2fc", "id": "1Pf93S7fNNHcRcVHVPuJzwG1x5HzCXD31H", "label": "1Pf9...D31H", "shape": "dot", "size": 10, "title": "1Pf93S7fNNHcRcVHVPuJzwG1x5HzCXD31H"}, {"color": "#97c2fc", "id": "1DicSF7Phr7qrgm1QEeSB9sSfBtJBUMQgX", "label": "1Dic...MQgX", "shape": "dot", "size": 10, "title": "1DicSF7Phr7qrgm1QEeSB9sSfBtJBUMQgX"}, {"color": "#97c2fc", "id": "13BUrmg3xYiZyanznqK1DHvMYdGPAGafbx", "label": "13BU...afbx", "shape": "dot", "size": 10, "title": "13BUrmg3xYiZyanznqK1DHvMYdGPAGafbx"}, {"color": "#97c2fc", "id": "1J3PtFcR5C9CaG84VFWy2qgafpReSrxNgB", "label": "1J3P...xNgB", "shape": "dot", "size": 10, "title": "1J3PtFcR5C9CaG84VFWy2qgafpReSrxNgB"}, {"color": "#97c2fc", "id": "1PANRuwAet9F6WSVZLC2fkuxTeMFxvdzFZ", "label": "1PAN...dzFZ", "shape": "dot", "size": 10, "title": "1PANRuwAet9F6WSVZLC2fkuxTeMFxvdzFZ"}, {"color": "#97c2fc", "id": "18827DZkxSiq7kKrrJ7Zd6RcvV4JrqJPqM", "label": "1882...JPqM", "shape": "dot", "size": 10, "title": "18827DZkxSiq7kKrrJ7Zd6RcvV4JrqJPqM"}, {"color": "#97c2fc", "id": "17DE5xrhxdHZz9NtwQeWKWojc6GvKQdmEY", "label": "17DE...dmEY", "shape": "dot", "size": 10, "title": "17DE5xrhxdHZz9NtwQeWKWojc6GvKQdmEY"}, {"color": "#97c2fc", "id": "1GsSzXPqyEuRMk4CrJNDAsaRLZVG4NBaZE", "label": "1GsS...BaZE", "shape": "dot", "size": 10, "title": "1GsSzXPqyEuRMk4CrJNDAsaRLZVG4NBaZE"}, {"color": "#97c2fc", "id": "14J6kU4Di1x8J26E1emRf2k14vmY8Z46B6", "label": "14J6...46B6", "shape": "dot", "size": 10, "title": "14J6kU4Di1x8J26E1emRf2k14vmY8Z46B6"}, {"color": "#97c2fc", "id": "1BghQkWhDXNcHzZXLiKYceDMdzpWyzE16i", "label": "1Bgh...E16i", "shape": "dot", "size": 10, "title": "1BghQkWhDXNcHzZXLiKYceDMdzpWyzE16i"}, {"color": "#97c2fc", "id": "1Mhun8dAqnDfpgVMHaVyVzAfsBM46AUwtU", "label": "1Mhu...UwtU", "shape": "dot", "size": 10, "title": "1Mhun8dAqnDfpgVMHaVyVzAfsBM46AUwtU"}, {"color": "#97c2fc", "id": "161PvdQ3AvBk5rTXGxNQ3cVEaJBMasFjZG", "label": "161P...FjZG", "shape": "dot", "size": 10, "title": "161PvdQ3AvBk5rTXGxNQ3cVEaJBMasFjZG"}, {"color": "#97c2fc", "id": "1JNmuKjihiWGV44QAn4boD89dBJLqLM1g2", "label": "1JNm...M1g2", "shape": "dot", "size": 10, "title": "1JNmuKjihiWGV44QAn4boD89dBJLqLM1g2"}, {"color": "#97c2fc", "id": "13rRDzSFjifbaY9sa6c8bQDzJDUxSPYnpx", "label": "13rR...Ynpx", "shape": "dot", "size": 10, "title": "13rRDzSFjifbaY9sa6c8bQDzJDUxSPYnpx"}, {"color": "#97c2fc", "id": "1yVQ1AKnAu6eeyvYcjW125EXTYbnaU4zC", "label": "1yVQ...U4zC", "shape": "dot", "size": 10, "title": "1yVQ1AKnAu6eeyvYcjW125EXTYbnaU4zC"}, {"color": "#97c2fc", "id": "1JNwXAY8WRrZPZ38MBN7SHGWNPJWuyLmLb", "label": "1JNw...LmLb", "shape": "dot", "size": 10, "title": "1JNwXAY8WRrZPZ38MBN7SHGWNPJWuyLmLb"}, {"color": "#97c2fc", "id": "1Fb7QNstHt93FTLzTe15ZVzyDmvTKrvyC5", "label": "1Fb7...vyC5", "shape": "dot", "size": 10, "title": "1Fb7QNstHt93FTLzTe15ZVzyDmvTKrvyC5"}, {"color": "#97c2fc", "id": "1Ahb665Y2VwyUskeT4DtmRHJBav57XmXKG", "label": "1Ahb...mXKG", "shape": "dot", "size": 10, "title": "1Ahb665Y2VwyUskeT4DtmRHJBav57XmXKG"}, {"color": "#97c2fc", "id": "12YpttxmH3WUkigNVwoqG2ZDSzAK42kTE8", "label": "12Yp...kTE8", "shape": "dot", "size": 10, "title": "12YpttxmH3WUkigNVwoqG2ZDSzAK42kTE8"}, {"color": "#97c2fc", "id": "19FUFDvrZHQaECBxDUi5A6vnYKrVHxBq9J", "label": "19FU...Bq9J", "shape": "dot", "size": 10, "title": "19FUFDvrZHQaECBxDUi5A6vnYKrVHxBq9J"}, {"color": "#97c2fc", "id": "1P6jqvQazaSbAEc1f5KVPnEgQMMXR3tCZ5", "label": "1P6j...tCZ5", "shape": "dot", "size": 10, "title": "1P6jqvQazaSbAEc1f5KVPnEgQMMXR3tCZ5"}, {"color": "#97c2fc", "id": "1ChMRpQF8KivTjZoe8vWK7AMWon6ZW7xdN", "label": "1ChM...7xdN", "shape": "dot", "size": 10, "title": "1ChMRpQF8KivTjZoe8vWK7AMWon6ZW7xdN"}, {"color": "#97c2fc", "id": "17ZyGXjLyoFU6V21q7cQa35Nxo3bCk7uXE", "label": "17Zy...7uXE", "shape": "dot", "size": 10, "title": "17ZyGXjLyoFU6V21q7cQa35Nxo3bCk7uXE"}, {"color": "#97c2fc", "id": "1GHDv2EQ99QFtH6rPjju2e91QEXPFbxrTB", "label": "1GHD...xrTB", "shape": "dot", "size": 10, "title": "1GHDv2EQ99QFtH6rPjju2e91QEXPFbxrTB"}, {"color": "#97c2fc", "id": "13tZveKo9TbBqnAhzXF84yT3EBwDopd3LN", "label": "13tZ...d3LN", "shape": "dot", "size": 10, "title": "13tZveKo9TbBqnAhzXF84yT3EBwDopd3LN"}, {"color": "#97c2fc", "id": "1PTdz6PQk61zALEM2475sPGNVCoTcLLvjm", "label": "1PTd...Lvjm", "shape": "dot", "size": 10, "title": "1PTdz6PQk61zALEM2475sPGNVCoTcLLvjm"}, {"color": "#97c2fc", "id": "15HDbWapPJKUbgmsWnDxgmoLzMwjHtNFiR", "label": "15HD...NFiR", "shape": "dot", "size": 10, "title": "15HDbWapPJKUbgmsWnDxgmoLzMwjHtNFiR"}, {"color": "#97c2fc", "id": "1EcwshfQQEUS4Rmzypi858j2655mqaF86D", "label": "1Ecw...F86D", "shape": "dot", "size": 10, "title": "1EcwshfQQEUS4Rmzypi858j2655mqaF86D"}, {"color": "#97c2fc", "id": "1CvghS8J7bkqbsNXbMSnhGhmXAG9PzFvdo", "label": "1Cvg...Fvdo", "shape": "dot", "size": 10, "title": "1CvghS8J7bkqbsNXbMSnhGhmXAG9PzFvdo"}, {"color": "#97c2fc", "id": "18pZSGdxpp6z3BG5sYxDQf3XhzN9x8T32A", "label": "18pZ...T32A", "shape": "dot", "size": 10, "title": "18pZSGdxpp6z3BG5sYxDQf3XhzN9x8T32A"}, {"color": "#97c2fc", "id": "152RJBC6qfyF8qLpTb5pRyc1BSjBNURaKa", "label": "152R...RaKa", "shape": "dot", "size": 10, "title": "152RJBC6qfyF8qLpTb5pRyc1BSjBNURaKa"}, {"color": "#97c2fc", "id": "14dES6aEFRDHhBShFoLESeFTtVdjVpfXCc", "label": "14dE...fXCc", "shape": "dot", "size": 10, "title": "14dES6aEFRDHhBShFoLESeFTtVdjVpfXCc"}, {"color": "#97c2fc", "id": "19FajiVgS75nsvTmyfV8HVcUYRRegpnbJu", "label": "19Fa...nbJu", "shape": "dot", "size": 10, "title": "19FajiVgS75nsvTmyfV8HVcUYRRegpnbJu"}, {"color": "#97c2fc", "id": "1MQ4fX3tCiEfn3rbDNDTxNDKnzRBPogmAm", "label": "1MQ4...gmAm", "shape": "dot", "size": 10, "title": "1MQ4fX3tCiEfn3rbDNDTxNDKnzRBPogmAm"}, {"color": "#97c2fc", "id": "1DJjRNxu8u5v4jFW3QeRgUFyLBFGt4NGJc", "label": "1DJj...NGJc", "shape": "dot", "size": 10, "title": "1DJjRNxu8u5v4jFW3QeRgUFyLBFGt4NGJc"}, {"color": "#97c2fc", "id": "1A4JvkDoZQmQasKzjBTrdZK1NkhH9UCY9U", "label": "1A4J...CY9U", "shape": "dot", "size": 10, "title": "1A4JvkDoZQmQasKzjBTrdZK1NkhH9UCY9U"}, {"color": "#97c2fc", "id": "19vSpV4GpjU2PXPTrjyT6pk3H6dDyUMCVS", "label": "19vS...MCVS", "shape": "dot", "size": 10, "title": "19vSpV4GpjU2PXPTrjyT6pk3H6dDyUMCVS"}, {"color": "#97c2fc", "id": "13Fjt8w1owGcAExg1xzd361EAm5wH4PK4x", "label": "13Fj...PK4x", "shape": "dot", "size": 10, "title": "13Fjt8w1owGcAExg1xzd361EAm5wH4PK4x"}, {"color": "#97c2fc", "id": "1AbEQbwtFC27UBZtpzijfJLd5mT2bN2sN7", "label": "1AbE...2sN7", "shape": "dot", "size": 10, "title": "1AbEQbwtFC27UBZtpzijfJLd5mT2bN2sN7"}, {"color": "#97c2fc", "id": "1Av9andHtqJ4mTX6qa3S8UAKQ2H3kgPfMP", "label": "1Av9...PfMP", "shape": "dot", "size": 10, "title": "1Av9andHtqJ4mTX6qa3S8UAKQ2H3kgPfMP"}, {"color": "#97c2fc", "id": "188T1VGqbeawp4GM2wQVNqBEdM1FhACnVZ", "label": "188T...CnVZ", "shape": "dot", "size": 10, "title": "188T1VGqbeawp4GM2wQVNqBEdM1FhACnVZ"}, {"color": "#97c2fc", "id": "1Po1oXMCWobE6kxWr8rJEP1SRq71JSD3t4", "label": "1Po1...D3t4", "shape": "dot", "size": 10, "title": "1Po1oXMCWobE6kxWr8rJEP1SRq71JSD3t4"}, {"color": "#97c2fc", "id": "14ZiZB3j3MBhWvgR75QLqAjAmMQ8hbonma", "label": "14Zi...onma", "shape": "dot", "size": 10, "title": "14ZiZB3j3MBhWvgR75QLqAjAmMQ8hbonma"}, {"color": "#97c2fc", "id": "1DMDUbPeKd8MTVZm2523DHYNAwQUoysZEh", "label": "1DMD...sZEh", "shape": "dot", "size": 10, "title": "1DMDUbPeKd8MTVZm2523DHYNAwQUoysZEh"}, {"color": "#97c2fc", "id": "15rHomWLjU7y4MusPMYcpHJMZQkrGktXAA", "label": "15rH...tXAA", "shape": "dot", "size": 10, "title": "15rHomWLjU7y4MusPMYcpHJMZQkrGktXAA"}, {"color": "#97c2fc", "id": "1KhRjhvuvaS3V2QLa1oVNAahhZpfkxA6QH", "label": "1KhR...A6QH", "shape": "dot", "size": 10, "title": "1KhRjhvuvaS3V2QLa1oVNAahhZpfkxA6QH"}, {"color": "#97c2fc", "id": "1EfQ3z9p4YBwXdmqEznok2NUY1aB3H2GJo", "label": "1EfQ...2GJo", "shape": "dot", "size": 10, "title": "1EfQ3z9p4YBwXdmqEznok2NUY1aB3H2GJo"}, {"color": "#97c2fc", "id": "1LzTrwqCP8zgDdaUup1hnEdmnCLAefXDJi", "label": "1LzT...XDJi", "shape": "dot", "size": 10, "title": "1LzTrwqCP8zgDdaUup1hnEdmnCLAefXDJi"}, {"color": "#97c2fc", "id": "1MDyyyjHPNTMvMePcQRS2YQsFv8VQM3hN6", "label": "1MDy...3hN6", "shape": "dot", "size": 10, "title": "1MDyyyjHPNTMvMePcQRS2YQsFv8VQM3hN6"}, {"color": "#97c2fc", "id": "12Py7XeXYTMXD8FW5881ziDqc2pakkoW2Q", "label": "12Py...oW2Q", "shape": "dot", "size": 10, "title": "12Py7XeXYTMXD8FW5881ziDqc2pakkoW2Q"}, {"color": "#97c2fc", "id": "1B84NRtZNMyvFHfhFvMNK4zSXvpEhU5DSY", "label": "1B84...5DSY", "shape": "dot", "size": 10, "title": "1B84NRtZNMyvFHfhFvMNK4zSXvpEhU5DSY"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "color": "#c21206", "from": "18yXaf6HErMp26BEZwe8rCRJJMH5XMcvve", "title": "7660c3c260148a231455c5978762a935b048860bf740da469bf1f247b9bd5518", "to": "18yXaf6HErMp26BEZwe8rCRJJMH5XMcvve", "width": 1}, {"arrows": "to", "color": "#c21206", "from": "18yXaf6HErMp26BEZwe8rCRJJMH5XMcvve", "title": "512949fa7b4b3b25038a2121eab66505b61547e67040f6420833d90b3648fa23", "to": "1Ee9ZiZkmygAXUiyeYKRSA3tLe4vNYEAgA", "width": 1}, {"arrows": "to", "from": "18yXaf6HErMp26BEZwe8rCRJJMH5XMcvve", "title": "10e538420b5d572436df0895db9c4168481b7d313c71cb9351ba30fc4f87b233", "to": "17Q26xzqXo1cf5GHGjWGeyR73df8KLyEtn", "width": 1}, {"arrows": "to", "from": "18yXaf6HErMp26BEZwe8rCRJJMH5XMcvve", "title": "512949fa7b4b3b25038a2121eab66505b61547e67040f6420833d90b3648fa23", "to": "1L5nHdAdAD9uGcVgrjv3TVMTPPMpDw5vQq", "width": 1}, {"arrows": "to", "color": "#c21206", "from": "18yXaf6HErMp26BEZwe8rCRJJMH5XMcvve", "title": "a45aabb7470c61c05d195758b8746d7bd1445a756deac713264a0e32936c664b", "to": "1JwWLvfCvkFGepfsyYLLBES8LRVB3N4Dey", "width": 1}, {"arrows": "to", "color": "#c21206", "from": "1JwWLvfCvkFGepfsyYLLBES8LRVB3N4Dey", "title": "7660c3c260148a231455c5978762a935b048860bf740da469bf1f247b9bd5518", "to": "18yXaf6HErMp26BEZwe8rCRJJMH5XMcvve", "width": 1}, {"arrows": "to", "color": "#c21206", "from": "1JwWLvfCvkFGepfsyYLLBES8LRVB3N4Dey", "title": "03588a105bf61f628502ab1b69b16ba585bb964ec1c2d857f5784de16fd24381", "to": "1JwWLvfCvkFGepfsyYLLBES8LRVB3N4Dey", "width": 1}, {"arrows": "to", "from": "1JwWLvfCvkFGepfsyYLLBES8LRVB3N4Dey", "title": "a45aabb7470c61c05d195758b8746d7bd1445a756deac713264a0e32936c664b", "to": "1AXJqXfDJyUEmx5cRAWB8ZL44NJoGAc7JH", "width": 1}, {"arrows": "to", "from": "1JwWLvfCvkFGepfsyYLLBES8LRVB3N4Dey", "title": "b6b62b8b61b3838da15198541dff98fa40af38234760595acbf6212b27da9072", "to": "13fMYmzE2KQGXs94YqWAhkH3orLD732x4V", "width": 1}, {"arrows": "to", "from": "1JwWLvfCvkFGepfsyYLLBES8LRVB3N4Dey", "title": "03588a105bf61f628502ab1b69b16ba585bb964ec1c2d857f5784de16fd24381", "to": "1BX8KdFCDVMPaKZmeCtnQofSWJ9qAFZAY1", "width": 1}, {"arrows": "to", "from": "1LrRsG7TGELTJubX3D72oAP2Pt8PRMvHmp", "title": "10e538420b5d572436df0895db9c4168481b7d313c71cb9351ba30fc4f87b233", "to": "1JwWLvfCvkFGepfsyYLLBES8LRVB3N4Dey", "width": 1}, {"arrows": "to", "from": "1NSDY5p8huorYpbhpfJxpMPcohswJLiC53", "title": "db50c0a727bab08e3e1f388c0b29339daf5ff9296c6243a6bc9df1c2fdbf89f3", "to": "1LrRsG7TGELTJubX3D72oAP2Pt8PRMvHmp", "width": 1}, {"arrows": "to", "from": "176vkzrD8xKjhs1dm7ZBLLvDaCVMd5UzFR", "title": "6cfd6f056aecf70d517f5fa82d9c6449235882f1bc86af4ca48c2cf43e4b98cc", "to": "1NSDY5p8huorYpbhpfJxpMPcohswJLiC53", "width": 1}, {"arrows": "to", "from": "1BQ1qf3s9pEZWkG3WaY9jv8CCX97xkaLP6", "title": "db50c0a727bab08e3e1f388c0b29339daf5ff9296c6243a6bc9df1c2fdbf89f3", "to": "1NSDY5p8huorYpbhpfJxpMPcohswJLiC53", "width": 1}, {"arrows": "to", "from": "1PyLvZsYKFqCxYz8xYVh72cuW4dNm8o139", "title": "f94faac6d54ea189fa8347522820a77068b50e915ae6fc04f3f4ed2a65d7e7eb", "to": "1BQ1qf3s9pEZWkG3WaY9jv8CCX97xkaLP6", "width": 1}, {"arrows": "to", "from": "1DK9KYkqJRyGQFAuBLNTZ7Txdjk4DDrfZJ", "title": "f94faac6d54ea189fa8347522820a77068b50e915ae6fc04f3f4ed2a65d7e7eb", "to": "1BQ1qf3s9pEZWkG3WaY9jv8CCX97xkaLP6", "width": 1}, {"arrows": "to", "from": "1GaQzQpzkzfLcfbhXUBtw9HjXaLLzuj3ea", "title": "03588a105bf61f628502ab1b69b16ba585bb964ec1c2d857f5784de16fd24381", "to": "1JwWLvfCvkFGepfsyYLLBES8LRVB3N4Dey", "width": 1}, {"arrows": "to", "from": "1MnxDihvnPtmyv6VrsApn5kCWhLhxgJu3B", "title": "03588a105bf61f628502ab1b69b16ba585bb964ec1c2d857f5784de16fd24381", "to": "1JwWLvfCvkFGepfsyYLLBES8LRVB3N4Dey", "width": 1}, {"arrows": "to", "from": "1MnxDihvnPtmyv6VrsApn5kCWhLhxgJu3B", "title": "03588a105bf61f628502ab1b69b16ba585bb964ec1c2d857f5784de16fd24381", "to": "1GaQzQpzkzfLcfbhXUBtw9HjXaLLzuj3ea", "width": 1}, {"arrows": "to", "from": "1MnxDihvnPtmyv6VrsApn5kCWhLhxgJu3B", "title": "03588a105bf61f628502ab1b69b16ba585bb964ec1c2d857f5784de16fd24381", "to": "1Dg24RCq51dWUQvurPB3E2cpiU32Gi6kht", "width": 1}, {"arrows": "to", "from": "1AXJqXfDJyUEmx5cRAWB8ZL44NJoGAc7JH", "title": "03588a105bf61f628502ab1b69b16ba585bb964ec1c2d857f5784de16fd24381", "to": "1JwWLvfCvkFGepfsyYLLBES8LRVB3N4Dey", "width": 1}, {"arrows": "to", "from": "1AXJqXfDJyUEmx5cRAWB8ZL44NJoGAc7JH", "title": "03588a105bf61f628502ab1b69b16ba585bb964ec1c2d857f5784de16fd24381", "to": "1MnxDihvnPtmyv6VrsApn5kCWhLhxgJu3B", "width": 1}, {"arrows": "to", "from": "1AXJqXfDJyUEmx5cRAWB8ZL44NJoGAc7JH", "title": "03588a105bf61f628502ab1b69b16ba585bb964ec1c2d857f5784de16fd24381", "to": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "width": 1}, {"arrows": "to", "from": "1P1mRyrQ73mKxhuKjPQz6UbLNhZFhW4AD9", "title": "b6b62b8b61b3838da15198541dff98fa40af38234760595acbf6212b27da9072", "to": "1JwWLvfCvkFGepfsyYLLBES8LRVB3N4Dey", "width": 1}, {"arrows": "to", "from": "122QtHg8ytaWf4xuKCa169rDj5FUg7Ph7L", "title": "512949fa7b4b3b25038a2121eab66505b61547e67040f6420833d90b3648fa23", "to": "1JwWLvfCvkFGepfsyYLLBES8LRVB3N4Dey", "width": 1}, {"arrows": "to", "from": "18nFHs2wBb9ocHnaFwaJrpZrFqVYGLXfVV", "title": "0f2c0c17ab217b8f80b93cc505d2c9535326d65cefb3fb579158ea17a497c9e3", "to": "122QtHg8ytaWf4xuKCa169rDj5FUg7Ph7L", "width": 1}, {"arrows": "to", "from": "13Pp8tsMXU3dzvuiTbzLYEbbygZFJPUKhr", "title": "6864dd652e378b50bcd46789c39e4786ce1511425b6c665bb3c2b9cb663a6c5a", "to": "18nFHs2wBb9ocHnaFwaJrpZrFqVYGLXfVV", "width": 1}, {"arrows": "to", "from": "1FnYXMbBw8rUW6JXWXPHKbXQh5o4TTVKh2", "title": "0f2c0c17ab217b8f80b93cc505d2c9535326d65cefb3fb579158ea17a497c9e3", "to": "18nFHs2wBb9ocHnaFwaJrpZrFqVYGLXfVV", "width": 1}, {"arrows": "to", "from": "14gdrFWZUWpTZc8RSTBgXxxrBm8N3jp1Ac", "title": "45c22d26ef5308f632e839933d19d93c3245034d3cede6ad0ddfcb4a8aa16e05", "to": "1FnYXMbBw8rUW6JXWXPHKbXQh5o4TTVKh2", "width": 1}, {"arrows": "to", "from": "1NVSf1NaS6YgqrvnuxbzJWFeq5KaJNh4X8", "title": "45c22d26ef5308f632e839933d19d93c3245034d3cede6ad0ddfcb4a8aa16e05", "to": "1FnYXMbBw8rUW6JXWXPHKbXQh5o4TTVKh2", "width": 1}, {"arrows": "to", "from": "16Kk1DTbSK7SrzKE268CAFocV1u3ZqtjKk", "title": "ecb1f3ece4f5e3c6cecfb611d7f5dd7fe6acf70e569e5c10f98bcd8aeb235009", "to": "1GaQzQpzkzfLcfbhXUBtw9HjXaLLzuj3ea", "width": 1}, {"arrows": "to", "from": "1Dg24RCq51dWUQvurPB3E2cpiU32Gi6kht", "title": "ecb1f3ece4f5e3c6cecfb611d7f5dd7fe6acf70e569e5c10f98bcd8aeb235009", "to": "1GaQzQpzkzfLcfbhXUBtw9HjXaLLzuj3ea", "width": 1}, {"arrows": "to", "from": "1Dg24RCq51dWUQvurPB3E2cpiU32Gi6kht", "title": "ecb1f3ece4f5e3c6cecfb611d7f5dd7fe6acf70e569e5c10f98bcd8aeb235009", "to": "16Kk1DTbSK7SrzKE268CAFocV1u3ZqtjKk", "width": 1}, {"arrows": "to", "from": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "title": "2403d3c98a0f96802b07378c7acee31fa958661cd7f37a806c853889dda395e9", "to": "1MnxDihvnPtmyv6VrsApn5kCWhLhxgJu3B", "width": 1}, {"arrows": "to", "from": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "title": "2403d3c98a0f96802b07378c7acee31fa958661cd7f37a806c853889dda395e9", "to": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "width": 1}, {"arrows": "to", "from": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "title": "2403d3c98a0f96802b07378c7acee31fa958661cd7f37a806c853889dda395e9", "to": "1Ge1uiC7RSVGGD3foaLXLyii4VJNvaHLpD", "width": 1}, {"arrows": "to", "from": "1Ge1uiC7RSVGGD3foaLXLyii4VJNvaHLpD", "title": "2403d3c98a0f96802b07378c7acee31fa958661cd7f37a806c853889dda395e9", "to": "1MnxDihvnPtmyv6VrsApn5kCWhLhxgJu3B", "width": 1}, {"arrows": "to", "from": "1Ge1uiC7RSVGGD3foaLXLyii4VJNvaHLpD", "title": "2403d3c98a0f96802b07378c7acee31fa958661cd7f37a806c853889dda395e9", "to": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "width": 1}, {"arrows": "to", "from": "1Ge1uiC7RSVGGD3foaLXLyii4VJNvaHLpD", "title": "2403d3c98a0f96802b07378c7acee31fa958661cd7f37a806c853889dda395e9", "to": "1Ge1uiC7RSVGGD3foaLXLyii4VJNvaHLpD", "width": 1}, {"arrows": "to", "from": "1Pf93S7fNNHcRcVHVPuJzwG1x5HzCXD31H", "title": "f8f06c6b0945814f0069b429b4c369eac74a9d2c094cb00b85e0c8ec8be4d485", "to": "1AXJqXfDJyUEmx5cRAWB8ZL44NJoGAc7JH", "width": 1}, {"arrows": "to", "from": "1DicSF7Phr7qrgm1QEeSB9sSfBtJBUMQgX", "title": "f8f06c6b0945814f0069b429b4c369eac74a9d2c094cb00b85e0c8ec8be4d485", "to": "1AXJqXfDJyUEmx5cRAWB8ZL44NJoGAc7JH", "width": 1}, {"arrows": "to", "from": "1DicSF7Phr7qrgm1QEeSB9sSfBtJBUMQgX", "title": "f8f06c6b0945814f0069b429b4c369eac74a9d2c094cb00b85e0c8ec8be4d485", "to": "1Pf93S7fNNHcRcVHVPuJzwG1x5HzCXD31H", "width": 1}, {"arrows": "to", "from": "13BUrmg3xYiZyanznqK1DHvMYdGPAGafbx", "title": "2d598ca840c8bc9d9b3efa428ff4d75629f8e47a31074380145c55bc5c81f292", "to": "1P1mRyrQ73mKxhuKjPQz6UbLNhZFhW4AD9", "width": 1}, {"arrows": "to", "from": "1J3PtFcR5C9CaG84VFWy2qgafpReSrxNgB", "title": "2d598ca840c8bc9d9b3efa428ff4d75629f8e47a31074380145c55bc5c81f292", "to": "1P1mRyrQ73mKxhuKjPQz6UbLNhZFhW4AD9", "width": 1}, {"arrows": "to", "from": "1J3PtFcR5C9CaG84VFWy2qgafpReSrxNgB", "title": "2d598ca840c8bc9d9b3efa428ff4d75629f8e47a31074380145c55bc5c81f292", "to": "13BUrmg3xYiZyanznqK1DHvMYdGPAGafbx", "width": 1}, {"arrows": "to", "from": "1PANRuwAet9F6WSVZLC2fkuxTeMFxvdzFZ", "title": "96f6cd1304bc2ec9846dccd7931801ed7e7eb65c91f6c74aca6e0f85b52ceb54", "to": "13BUrmg3xYiZyanznqK1DHvMYdGPAGafbx", "width": 1}, {"arrows": "to", "from": "18827DZkxSiq7kKrrJ7Zd6RcvV4JrqJPqM", "title": "eb67f23a4a42a7fdc14f6360a57621ec4020b33404f900931268f4150448631d", "to": "1J3PtFcR5C9CaG84VFWy2qgafpReSrxNgB", "width": 1}, {"arrows": "to", "from": "17DE5xrhxdHZz9NtwQeWKWojc6GvKQdmEY", "title": "eb67f23a4a42a7fdc14f6360a57621ec4020b33404f900931268f4150448631d", "to": "1J3PtFcR5C9CaG84VFWy2qgafpReSrxNgB", "width": 1}, {"arrows": "to", "from": "1GsSzXPqyEuRMk4CrJNDAsaRLZVG4NBaZE", "title": "e877f9a86f952f281da8892e2434ec9414c46188798cd9249f56bf3c6dc48646", "to": "16Kk1DTbSK7SrzKE268CAFocV1u3ZqtjKk", "width": 1}, {"arrows": "to", "from": "14J6kU4Di1x8J26E1emRf2k14vmY8Z46B6", "title": "14d94b77b524d3aeffa10d80d1ce25ff9b6dd665677b57e794ee382e741423f9", "to": "1Dg24RCq51dWUQvurPB3E2cpiU32Gi6kht", "width": 1}, {"arrows": "to", "from": "1BghQkWhDXNcHzZXLiKYceDMdzpWyzE16i", "title": "14d94b77b524d3aeffa10d80d1ce25ff9b6dd665677b57e794ee382e741423f9", "to": "1Dg24RCq51dWUQvurPB3E2cpiU32Gi6kht", "width": 1}, {"arrows": "to", "from": "1Mhun8dAqnDfpgVMHaVyVzAfsBM46AUwtU", "title": "99296997b8fb21fe63970586698e5b1ae3cc7b97e111bd89286a1a1b7bcf86b7", "to": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "width": 1}, {"arrows": "to", "from": "161PvdQ3AvBk5rTXGxNQ3cVEaJBMasFjZG", "title": "99296997b8fb21fe63970586698e5b1ae3cc7b97e111bd89286a1a1b7bcf86b7", "to": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "width": 1}, {"arrows": "to", "from": "1JNmuKjihiWGV44QAn4boD89dBJLqLM1g2", "title": "99296997b8fb21fe63970586698e5b1ae3cc7b97e111bd89286a1a1b7bcf86b7", "to": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "width": 1}, {"arrows": "to", "from": "13rRDzSFjifbaY9sa6c8bQDzJDUxSPYnpx", "title": "99296997b8fb21fe63970586698e5b1ae3cc7b97e111bd89286a1a1b7bcf86b7", "to": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "width": 1}, {"arrows": "to", "from": "1yVQ1AKnAu6eeyvYcjW125EXTYbnaU4zC", "title": "99296997b8fb21fe63970586698e5b1ae3cc7b97e111bd89286a1a1b7bcf86b7", "to": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "width": 1}, {"arrows": "to", "from": "1JNwXAY8WRrZPZ38MBN7SHGWNPJWuyLmLb", "title": "99296997b8fb21fe63970586698e5b1ae3cc7b97e111bd89286a1a1b7bcf86b7", "to": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "width": 1}, {"arrows": "to", "from": "1Fb7QNstHt93FTLzTe15ZVzyDmvTKrvyC5", "title": "99296997b8fb21fe63970586698e5b1ae3cc7b97e111bd89286a1a1b7bcf86b7", "to": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "width": 1}, {"arrows": "to", "from": "1Ahb665Y2VwyUskeT4DtmRHJBav57XmXKG", "title": "99296997b8fb21fe63970586698e5b1ae3cc7b97e111bd89286a1a1b7bcf86b7", "to": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "width": 1}, {"arrows": "to", "from": "12YpttxmH3WUkigNVwoqG2ZDSzAK42kTE8", "title": "99296997b8fb21fe63970586698e5b1ae3cc7b97e111bd89286a1a1b7bcf86b7", "to": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "width": 1}, {"arrows": "to", "from": "19FUFDvrZHQaECBxDUi5A6vnYKrVHxBq9J", "title": "99296997b8fb21fe63970586698e5b1ae3cc7b97e111bd89286a1a1b7bcf86b7", "to": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "width": 1}, {"arrows": "to", "from": "1P6jqvQazaSbAEc1f5KVPnEgQMMXR3tCZ5", "title": "99296997b8fb21fe63970586698e5b1ae3cc7b97e111bd89286a1a1b7bcf86b7", "to": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "width": 1}, {"arrows": "to", "from": "1ChMRpQF8KivTjZoe8vWK7AMWon6ZW7xdN", "title": "1ba11ed7b6feac5a4c0fe841f23d3fe13eb8ad550c83a1938b055ba3bc77cd08", "to": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "width": 1}, {"arrows": "to", "from": "17ZyGXjLyoFU6V21q7cQa35Nxo3bCk7uXE", "title": "1ba11ed7b6feac5a4c0fe841f23d3fe13eb8ad550c83a1938b055ba3bc77cd08", "to": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "width": 1}, {"arrows": "to", "from": "1GHDv2EQ99QFtH6rPjju2e91QEXPFbxrTB", "title": "c5e7274d158d49fc5bcb4848542f5f0e8c561d0715e15511ef96f2bd51d0b98c", "to": "1Ge1uiC7RSVGGD3foaLXLyii4VJNvaHLpD", "width": 1}, {"arrows": "to", "from": "13tZveKo9TbBqnAhzXF84yT3EBwDopd3LN", "title": "658b64b940baa78d38e119cd2c0d913a407e47174607a52d79438afe4663eaba", "to": "1Ge1uiC7RSVGGD3foaLXLyii4VJNvaHLpD", "width": 1}, {"arrows": "to", "from": "1PTdz6PQk61zALEM2475sPGNVCoTcLLvjm", "title": "263cd0be777ca23c56881ccc90ab6c7c6c4d258efcddc662fa45f433f856245c", "to": "1Ge1uiC7RSVGGD3foaLXLyii4VJNvaHLpD", "width": 1}, {"arrows": "to", "from": "15HDbWapPJKUbgmsWnDxgmoLzMwjHtNFiR", "title": "07ff9c0804b77fd3a26836ae79c9c18287f6fe80c6071eb419e82cd06e1ac524", "to": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "width": 1}, {"arrows": "to", "from": "1EcwshfQQEUS4Rmzypi858j2655mqaF86D", "title": "07ff9c0804b77fd3a26836ae79c9c18287f6fe80c6071eb419e82cd06e1ac524", "to": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "width": 1}, {"arrows": "to", "from": "1CvghS8J7bkqbsNXbMSnhGhmXAG9PzFvdo", "title": "07ff9c0804b77fd3a26836ae79c9c18287f6fe80c6071eb419e82cd06e1ac524", "to": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "width": 1}, {"arrows": "to", "from": "18pZSGdxpp6z3BG5sYxDQf3XhzN9x8T32A", "title": "07ff9c0804b77fd3a26836ae79c9c18287f6fe80c6071eb419e82cd06e1ac524", "to": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "width": 1}, {"arrows": "to", "from": "152RJBC6qfyF8qLpTb5pRyc1BSjBNURaKa", "title": "07ff9c0804b77fd3a26836ae79c9c18287f6fe80c6071eb419e82cd06e1ac524", "to": "1Po9cWPPqfykFG1Zdrba7bkEcnkbq98BVD", "width": 1}, {"arrows": "to", "from": "14dES6aEFRDHhBShFoLESeFTtVdjVpfXCc", "title": "6a7b54c86878ac2c167945a353b4b57cf635f6395d978893cdee896f76c6f420", "to": "1Pf93S7fNNHcRcVHVPuJzwG1x5HzCXD31H", "width": 1}, {"arrows": "to", "from": "19FajiVgS75nsvTmyfV8HVcUYRRegpnbJu", "title": "6a7b54c86878ac2c167945a353b4b57cf635f6395d978893cdee896f76c6f420", "to": "1Pf93S7fNNHcRcVHVPuJzwG1x5HzCXD31H", "width": 1}, {"arrows": "to", "from": "1MQ4fX3tCiEfn3rbDNDTxNDKnzRBPogmAm", "title": "6a7b54c86878ac2c167945a353b4b57cf635f6395d978893cdee896f76c6f420", "to": "1Pf93S7fNNHcRcVHVPuJzwG1x5HzCXD31H", "width": 1}, {"arrows": "to", "from": "1DJjRNxu8u5v4jFW3QeRgUFyLBFGt4NGJc", "title": "6a7b54c86878ac2c167945a353b4b57cf635f6395d978893cdee896f76c6f420", "to": "1Pf93S7fNNHcRcVHVPuJzwG1x5HzCXD31H", "width": 1}, {"arrows": "to", "from": "1A4JvkDoZQmQasKzjBTrdZK1NkhH9UCY9U", "title": "bfa00b5da343542918f179ff92807c8ddc19a37b11d81d34ee9c91ece0d1266e", "to": "1DicSF7Phr7qrgm1QEeSB9sSfBtJBUMQgX", "width": 1}, {"arrows": "to", "from": "19vSpV4GpjU2PXPTrjyT6pk3H6dDyUMCVS", "title": "bfa00b5da343542918f179ff92807c8ddc19a37b11d81d34ee9c91ece0d1266e", "to": "1DicSF7Phr7qrgm1QEeSB9sSfBtJBUMQgX", "width": 1}, {"arrows": "to", "from": "13Fjt8w1owGcAExg1xzd361EAm5wH4PK4x", "title": "bfa00b5da343542918f179ff92807c8ddc19a37b11d81d34ee9c91ece0d1266e", "to": "1DicSF7Phr7qrgm1QEeSB9sSfBtJBUMQgX", "width": 1}, {"arrows": "to", "from": "13fMYmzE2KQGXs94YqWAhkH3orLD732x4V", "title": "0b020675768efdca62f34aced5ad31a1117a94a032bc7a9fa62d8d1cb08e174b", "to": "1AbEQbwtFC27UBZtpzijfJLd5mT2bN2sN7", "width": 1}, {"arrows": "to", "from": "1AbEQbwtFC27UBZtpzijfJLd5mT2bN2sN7", "title": "4e9eaa5a865958f855d49ec48f079f82f3941c9cbfa116b628decfa73c065388", "to": "1Av9andHtqJ4mTX6qa3S8UAKQ2H3kgPfMP", "width": 1}, {"arrows": "to", "from": "1AbEQbwtFC27UBZtpzijfJLd5mT2bN2sN7", "title": "4e9eaa5a865958f855d49ec48f079f82f3941c9cbfa116b628decfa73c065388", "to": "188T1VGqbeawp4GM2wQVNqBEdM1FhACnVZ", "width": 1}, {"arrows": "to", "from": "1AbEQbwtFC27UBZtpzijfJLd5mT2bN2sN7", "title": "0b020675768efdca62f34aced5ad31a1117a94a032bc7a9fa62d8d1cb08e174b", "to": "1Po1oXMCWobE6kxWr8rJEP1SRq71JSD3t4", "width": 1}, {"arrows": "to", "from": "1BX8KdFCDVMPaKZmeCtnQofSWJ9qAFZAY1", "title": "cde4e9cba24f1f3fc39e29b9abcb57c4171ed69bdb17af6301989686f1eab367", "to": "14ZiZB3j3MBhWvgR75QLqAjAmMQ8hbonma", "width": 1}, {"arrows": "to", "from": "14ZiZB3j3MBhWvgR75QLqAjAmMQ8hbonma", "title": "ceab9aeef5ae4216116f15589ba9d0e891e1bbd31e22a7b27d8d74ec6e0b01b8", "to": "1DMDUbPeKd8MTVZm2523DHYNAwQUoysZEh", "width": 1}, {"arrows": "to", "from": "14ZiZB3j3MBhWvgR75QLqAjAmMQ8hbonma", "title": "cde4e9cba24f1f3fc39e29b9abcb57c4171ed69bdb17af6301989686f1eab367", "to": "15rHomWLjU7y4MusPMYcpHJMZQkrGktXAA", "width": 1}, {"arrows": "to", "from": "15rHomWLjU7y4MusPMYcpHJMZQkrGktXAA", "title": "579fe475105c374dd2780cb4f6f5b4fad340444e1d3c8344e1f706c24d3bf9e5", "to": "1KhRjhvuvaS3V2QLa1oVNAahhZpfkxA6QH", "width": 1}, {"arrows": "to", "from": "15rHomWLjU7y4MusPMYcpHJMZQkrGktXAA", "title": "579fe475105c374dd2780cb4f6f5b4fad340444e1d3c8344e1f706c24d3bf9e5", "to": "1EfQ3z9p4YBwXdmqEznok2NUY1aB3H2GJo", "width": 1}, {"arrows": "to", "from": "15rHomWLjU7y4MusPMYcpHJMZQkrGktXAA", "title": "03588a105bf61f628502ab1b69b16ba585bb964ec1c2d857f5784de16fd24381", "to": "1LzTrwqCP8zgDdaUup1hnEdmnCLAefXDJi", "width": 1}, {"arrows": "to", "from": "1LzTrwqCP8zgDdaUup1hnEdmnCLAefXDJi", "title": "4e7b8b7405d04099d2208ff2a65dc4cfc250457b0523cec0ca5a99ed27e88c90", "to": "1MDyyyjHPNTMvMePcQRS2YQsFv8VQM3hN6", "width": 1}, {"arrows": "to", "from": "1LzTrwqCP8zgDdaUup1hnEdmnCLAefXDJi", "title": "c69a0728c1abeced27b6db506cfd254b92eb1c33196fd9620ff9888bb8991f96", "to": "12Py7XeXYTMXD8FW5881ziDqc2pakkoW2Q", "width": 1}, {"arrows": "to", "from": "1LzTrwqCP8zgDdaUup1hnEdmnCLAefXDJi", "title": "c69a0728c1abeced27b6db506cfd254b92eb1c33196fd9620ff9888bb8991f96", "to": "1LzTrwqCP8zgDdaUup1hnEdmnCLAefXDJi", "width": 1}, {"arrows": "to", "from": "1MDyyyjHPNTMvMePcQRS2YQsFv8VQM3hN6", "title": "1742de7a374255eeb75a4f15dcb9d7e73021db1629b381106146e5c5dcd86967", "to": "1B84NRtZNMyvFHfhFvMNK4zSXvpEhU5DSY", "width": 1}, {"arrows": "to", "from": "1MDyyyjHPNTMvMePcQRS2YQsFv8VQM3hN6", "title": "4e7b8b7405d04099d2208ff2a65dc4cfc250457b0523cec0ca5a99ed27e88c90", "to": "1LzTrwqCP8zgDdaUup1hnEdmnCLAefXDJi", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": true,
+        "filter": [
+            "physics"
+        ]
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+                  // if this network requires displaying the configure window,
+                  // put it in its div
+                  options.configure["container"] = document.getElementById("config");
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+                    network.on("click", neighbourhoodHighlight);
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
