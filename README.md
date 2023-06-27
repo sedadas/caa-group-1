@@ -13,16 +13,12 @@ Deactivate environment
 ```
 conda deactivate
 ```
-    
-Example of running command for Neighborhood
-```
-python ./scripts/Neighborhood.py -f "./data/input_addresses.json" -d 1 -t "data/transactions.json" -nb 4 -s True
-```
 
-Example of running command for clustering
+Exemple of running command for risk scoring downstream
 ```
-python ./scripts/clustering.py -o "data/clusters.json" -t "data/transactions.json"
+python ./Risk_scoring.py -d 3 -tx "7660c3c260148a231455c5978762a935b048860bf740da469bf1f247b9bd5518"
 ```
+    
 Exemple of running command for risk scoring upstream
 ```
 python ./Risk_scoring_upstream.py -d 4 -tx "c277a6c3d2c32b2c75ceebaca140b2e9ca9a31b32f464b64a4b11ab858b81708"
